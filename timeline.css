@@ -1,0 +1,524 @@
+/* ==========================================================================
+   TEACHER TIMELINE MODULE (Адаптированный блок творческого пути педагога)
+   ========================================================================== */
+
+.teacher-timeline-section {
+  position: relative;
+  width: 100%;
+  padding: 100px 0 120px;
+  overflow: hidden;
+  background: 
+    radial-gradient(900px 520px at 10% 15%, rgba(236, 226, 250, 0.75) 0%, transparent 70%),
+    radial-gradient(750px 480px at 90% 85%, rgba(243, 232, 255, 0.65) 0%, transparent 65%),
+    linear-gradient(180deg, #fbf8f9 0%, #faf8fd 50%, #fbf8f9 100%);
+  color: #341c52;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Мягкие размытые границы сверху и снизу для бесшовного слияния */
+.teacher-timeline-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(180deg, #fbf8f9 0%, rgba(251, 248, 249, 0.8) 35%, rgba(251, 248, 249, 0) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.teacher-timeline-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(0deg, #fbf8f9 0%, rgba(251, 248, 249, 0.8) 35%, rgba(251, 248, 249, 0) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Нежные акварельные фиалковые подложки */
+.teacher-timeline-section .blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+  animation: tlBlobFloat 22s ease-in-out infinite alternate;
+}
+.teacher-timeline-section .blob.b1 {
+  width: 580px; height: 580px;
+  left: -180px; top: 12%;
+  background: radial-gradient(circle, rgba(207, 184, 242, 0.45) 0%, transparent 70%);
+}
+.teacher-timeline-section .blob.b2 {
+  width: 520px; height: 520px;
+  right: -150px; bottom: 8%;
+  background: radial-gradient(circle, rgba(220, 196, 250, 0.5) 0%, transparent 70%);
+  animation-delay: -9s;
+}
+
+@keyframes tlBlobFloat {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(25px, -20px) scale(1.06); }
+  100% { transform: translate(-20px, 15px) scale(0.96); }
+}
+
+/* Фоновый интерактивный холст парящей пыльцы */
+.teacher-timeline-section #ambient-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.teacher-timeline-section .wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 45px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   ЗАГОЛОВОК СЕКЦИИ
+   ========================================================================== */
+.teacher-timeline-section .sec-head {
+  position: relative;
+  margin-bottom: 56px;
+  max-width: 820px;
+}
+
+.teacher-timeline-section .sec-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 21px;
+  color: #854ec7;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.teacher-timeline-section .sec-kicker::before {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #854ec7);
+}
+.teacher-timeline-section .sec-kicker::after {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: linear-gradient(90deg, #854ec7, transparent);
+}
+
+.teacher-timeline-section .sec-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(42px, 5vw, 62px);
+  line-height: 1.1;
+  font-weight: 700;
+  color: #241238;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+}
+
+.teacher-timeline-section .sec-title em {
+  font-family: 'Marck Script', 'Cormorant Garamond', cursive;
+  font-style: italic;
+  font-weight: 400;
+  color: #854ec7;
+  position: relative;
+  display: inline-block;
+  padding-left: 6px;
+}
+
+.teacher-timeline-section .sec-title-flourish {
+  display: block;
+  margin-top: 6px;
+  width: 190px;
+  height: 12px;
+  opacity: 0.75;
+}
+
+.teacher-timeline-section .sec-lead {
+  color: #5e378c;
+  font-size: 17.5px;
+  line-height: 1.75;
+  font-weight: 400;
+  margin-top: 14px;
+  max-width: 720px;
+}
+
+/* ==========================================================================
+   СЕТКА БЛОКА
+   ========================================================================== */
+.teacher-timeline-section .teacher-grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 65px;
+  align-items: start;
+}
+
+/* ==========================================================================
+   ЛЕВАЯ КОЛОНКА: БЛАГОРОДНЫЙ ПОРТРЕТ И КРЕДИТЫ
+   ========================================================================== */
+.teacher-timeline-section .teacher-photo-col {
+  position: sticky;
+  top: 40px;
+}
+
+.teacher-timeline-section .teacher-photo-card {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  aspect-ratio: 4 / 5.1;
+  background: linear-gradient(160deg, #f0e6fc, #ffffff);
+  box-shadow: 
+    0 1px 0 1px rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(157, 107, 227, 0.22),
+    0 24px 55px -14px rgba(45, 18, 77, 0.28);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+}
+
+.teacher-timeline-section .teacher-photo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 1px 0 1px rgba(255, 255, 255, 1),
+    0 0 0 1.5px rgba(157, 107, 227, 0.45),
+    0 30px 65px -12px rgba(45, 18, 77, 0.35);
+}
+
+.teacher-timeline-section .teacher-photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 18%;
+  display: block;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.teacher-timeline-section .teacher-photo-card:hover img {
+  transform: scale(1.035);
+}
+
+.teacher-timeline-section .photo-light-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(157, 107, 227, 0.12) 75%,
+    transparent 100%
+  );
+}
+
+.teacher-timeline-section .photo-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 50px 28px 24px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(36, 18, 56, 0.72) 48%,
+    rgba(28, 12, 46, 0.92) 100%
+  );
+  color: #ffffff;
+  z-index: 2;
+}
+
+.teacher-timeline-section .photo-caption .n {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+}
+
+.teacher-timeline-section .photo-caption .r {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: #e5d7f7;
+  margin-top: 2px;
+  opacity: 0.95;
+}
+
+.teacher-timeline-section .creds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 24px;
+}
+
+.teacher-timeline-section .cred {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(133, 78, 199, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  font-weight: 600;
+  color: #341c52;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 14px -4px rgba(110, 80, 160, 0.12);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
+.teacher-timeline-section .cred-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #854ec7;
+  opacity: 0.75;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.teacher-timeline-section .cred:hover {
+  transform: translateY(-2px);
+  border-color: #854ec7;
+  background: #ffffff;
+  box-shadow: 0 8px 20px -6px rgba(133, 78, 199, 0.25);
+  color: #241238;
+}
+
+.teacher-timeline-section .cred:hover .cred-dot {
+  transform: scale(1.3);
+  opacity: 1;
+}
+
+.teacher-timeline-section .quote-card {
+  margin-top: 24px;
+  padding: 22px 24px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 241, 255, 0.8));
+  border-radius: 20px;
+  border: 1px solid rgba(157, 107, 227, 0.22);
+  box-shadow: 0 10px 26px -8px rgba(100, 60, 150, 0.08);
+  position: relative;
+}
+
+.teacher-timeline-section .quote-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.62;
+  color: #341c52;
+}
+
+.teacher-timeline-section .quote-author {
+  font-family: 'Marck Script', cursive;
+  font-size: 21px;
+  color: #854ec7;
+  text-align: right;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   ПРАВАЯ КОЛОНКА: АЖУРНЫЙ ТАЙМЛАЙН
+   ========================================================================== */
+.teacher-timeline-section .timeline {
+  position: relative;
+  padding-left: 44px;
+}
+
+.teacher-timeline-section .timeline::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  bottom: 20px;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    rgba(157, 107, 227, 0.15) 0%,
+    #854ec7 15%,
+    #cfb8f2 65%,
+    rgba(157, 107, 227, 0.15) 100%
+  );
+  border-radius: 2px;
+}
+
+.teacher-timeline-section .tl-item {
+  position: relative;
+  margin-bottom: 26px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.teacher-timeline-section .tl-item:last-child {
+  margin-bottom: 0;
+}
+
+.teacher-timeline-section .tl-item::before {
+  content: "";
+  position: absolute;
+  left: -44px;
+  top: 22px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #854ec7;
+  box-shadow: 0 0 0 5px rgba(157, 107, 227, 0.18);
+  z-index: 3;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.teacher-timeline-section .tl-item:hover::before {
+  transform: scale(1.3);
+  background: #854ec7;
+  border-color: #ffffff;
+  box-shadow: 0 0 0 7px rgba(157, 107, 227, 0.28);
+}
+
+.teacher-timeline-section .tl-box {
+  position: relative;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 20px;
+  padding: 22px 26px;
+  border: 1px solid rgba(133, 78, 199, 0.18);
+  box-shadow: 0 8px 24px -6px rgba(65, 28, 102, 0.08);
+  backdrop-filter: blur(12px);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.teacher-timeline-section .tl-item:hover .tl-box {
+  transform: translateX(6px);
+  background: #ffffff;
+  border-color: rgba(133, 78, 199, 0.45);
+  box-shadow: 0 18px 42px -10px rgba(65, 28, 102, 0.18);
+}
+
+.teacher-timeline-section .tl-box-flourish {
+  position: absolute;
+  right: 16px;
+  top: 14px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.14;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.teacher-timeline-section .tl-item:hover .tl-box-flourish {
+  opacity: 0.35;
+  transform: scale(1.15);
+}
+
+.teacher-timeline-section .tl-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.teacher-timeline-section .tl-item .y {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16.5px;
+  font-weight: 600;
+  color: #854ec7;
+  letter-spacing: 0.03em;
+}
+
+.teacher-timeline-section .tl-item .h {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: #241238;
+  line-height: 1.25;
+  margin: 2px 0 8px;
+}
+
+.teacher-timeline-section .tl-item .d {
+  color: #5e378c;
+  font-size: 15px;
+  line-height: 1.68;
+}
+
+.teacher-timeline-section .tl-note {
+  margin-top: 10px;
+  padding: 7px 14px;
+  background: rgba(157, 107, 227, 0.08);
+  border-left: 2px solid #854ec7;
+  border-radius: 0 8px 8px 0;
+  font-size: 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: #341c52;
+}
+
+/* ==========================================================================
+   АДАПТИВНОСТЬ
+   ========================================================================== */
+@media (max-width: 980px) {
+  .teacher-timeline-section .teacher-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .teacher-timeline-section .teacher-photo-col {
+    position: relative;
+    top: 0;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+  .teacher-timeline-section .creds {
+    justify-content: center;
+  }
+  .teacher-timeline-section .sec-head {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .teacher-timeline-section .sec-kicker {
+    justify-content: center;
+  }
+  .teacher-timeline-section .sec-title-flourish {
+    margin: 6px auto 0;
+  }
+}
+
+@media (max-width: 680px) {
+  .teacher-timeline-section {
+    padding: 60px 0 80px;
+  }
+  .teacher-timeline-section .wrap {
+    padding: 0 20px;
+  }
+  .teacher-timeline-section .sec-title {
+    font-size: 34px;
+  }
+  .teacher-timeline-section .timeline {
+    padding-left: 36px;
+  }
+  .teacher-timeline-section .timeline::before {
+    left: 10px;
+  }
+  .teacher-timeline-section .tl-item::before {
+    left: -36px;
+    top: 18px;
+    width: 12px;
+    height: 12px;
+  }
+  .teacher-timeline-section .tl-box {
+    padding: 18px 20px;
+  }
+}

@@ -1,0 +1,399 @@
+/* ═════════════════════════════════════════════════════════════
+   МОДУЛЬ ЗАПИСИ НА ОНЛАЙН-УРОКИ (Enrollment Module)
+   Стили изолированы под селектором .vz-enroll
+═════════════════════════════════════════════════════════════ */
+
+.vz-enroll {
+  --vz-deep: #432b6b;
+  --vz-700: #5b3e8b;
+  --vz-600: #6d4fa3;
+  --vz-500: #7a5cab;
+  --vz-400: #9b7fd0;
+  --vz-300: #b79ade;
+  --vz-200: #d9c8f0;
+  --vz-100: #ece2f8;
+  --vz-line: #e4d7f4;
+  --vz-ink: #4b3f63;
+  --vz-mut: #8d84a3;
+  position: relative;
+  overflow: hidden;
+  padding: 100px 20px 120px;
+  color: var(--vz-ink);
+  font-family: 'Montserrat', sans-serif;
+  background:
+    radial-gradient(850px 520px at 15% 15%, rgba(236, 226, 250, 0.65) 0%, transparent 70%),
+    radial-gradient(750px 480px at 85% 85%, rgba(243, 232, 255, 0.55) 0%, transparent 65%),
+    linear-gradient(180deg, #fbf8f9 0%, #ffffff 15%, #ffffff 85%, #fbf8f9 100%);
+}
+
+/* Мягкие размытые границы сверху и снизу для бесшовного слияния с соседними блоками */
+.vz-enroll::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 75px;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(180deg, #fbf8f9 0%, rgba(251, 248, 249, 0.75) 35%, rgba(251, 248, 249, 0) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.vz-enroll::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 75px;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(0deg, #fbf8f9 0%, rgba(251, 248, 249, 0.75) 35%, rgba(251, 248, 249, 0) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.vz-wrap {
+  position: relative;
+  z-index: 2;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.vz-head {
+  text-align: center;
+}
+
+.vz-overline {
+  margin: 0 0 14px;
+  font: 500 11px/1.6 'Montserrat', sans-serif;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--vz-500);
+}
+
+.vz-title {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: clamp(32px, 4.6vw, 48px);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--vz-deep);
+}
+
+.vz-sub {
+  margin: 6px 0 0;
+  font-family: 'Marck Script', cursive;
+  font-weight: 400;
+  font-size: clamp(24px, 3.4vw, 34px);
+  color: var(--vz-600);
+}
+
+.vz-divider {
+  display: block;
+  margin: 22px auto 18px;
+  width: min(340px, 80%);
+  height: auto;
+  color: var(--vz-400);
+}
+
+.vz-lead {
+  max-width: 56ch;
+  margin: 0 auto;
+  font: 400 15px/1.75 'Montserrat', sans-serif;
+  color: var(--vz-mut);
+}
+
+/* карточка: двойная рамка + точечный ажур */
+.vz-card {
+  position: relative;
+  max-width: 780px;
+  margin: 42px auto 0;
+  padding: clamp(34px, 5vw, 56px) clamp(22px, 5vw, 58px) clamp(34px, 5vw, 52px);
+  border: 1px solid var(--vz-line);
+  border-radius: 26px;
+  background-image:
+    radial-gradient(rgba(155, 127, 208, .09) 1px, transparent 1.5px),
+    linear-gradient(180deg, #fdfcff 0%, #f6f0fb 55%, #f1e9f9 100%);
+  background-size: 22px 22px, auto;
+  box-shadow: 0 24px 60px -32px rgba(91, 62, 139, .25), 0 4px 18px -10px rgba(91, 62, 139, .10);
+}
+
+.vz-card::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid #ddcdf0;
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+.vz-card::after {
+  content: '';
+  position: absolute;
+  inset: 19px;
+  border: 1px solid rgba(183, 154, 222, .32);
+  border-radius: 14px;
+  pointer-events: none;
+}
+
+/* форма */
+.vz-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.vz-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vz-field label {
+  font: 500 11px/1.4 'Montserrat', sans-serif;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--vz-600);
+}
+
+.vz-input, .vz-select {
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--vz-line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font: 400 15px/1.4 'Montserrat', sans-serif;
+  color: var(--vz-ink);
+  box-shadow: 0 2px 6px -2px rgba(91, 62, 139, .06);
+  transition: border-color .2s, box-shadow .2s;
+  box-sizing: border-box;
+}
+
+.vz-input::placeholder {
+  color: #b6abc9;
+}
+
+.vz-input:focus, .vz-select:focus {
+  outline: none;
+  border-color: var(--vz-400);
+  box-shadow: 0 0 0 4px rgba(155, 127, 208, .15);
+}
+
+.vz-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' fill='none' stroke='%237a5cab' stroke-width='1.8' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+.vz-select:not(.is-filled) {
+  color: #b6abc9;
+}
+
+.vz-attach {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, .85);
+  border: 1px dashed var(--vz-300);
+  border-radius: 16px;
+  padding: 12px 18px;
+  font-size: 13.5px;
+  color: var(--vz-600);
+  transition: opacity .3s, transform .3s;
+}
+
+.vz-attach .ic {
+  width: 18px;
+  height: 18px;
+  color: var(--vz-500);
+  flex: none;
+}
+
+.vz-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #f1e8fb, #e5d6f6);
+  border: 1px solid var(--vz-200);
+  border-radius: 999px;
+  padding: 6px 8px 6px 14px;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--vz-700);
+}
+
+.vz-chip button {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--vz-500);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 1px 3px rgba(91, 62, 139, .25);
+  transition: background .2s;
+}
+
+.vz-chip button:hover {
+  background: var(--vz-100);
+}
+
+.vz-hp {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.vz-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.vz-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  padding: 16px 36px;
+  border-radius: 999px;
+  font: 600 14px/1 'Montserrat', sans-serif;
+  letter-spacing: .06em;
+  color: #fff;
+  background: linear-gradient(135deg, #7b57b5 0%, #5b3e8b 60%, #4a2f76 100%);
+  box-shadow: 0 14px 30px -12px rgba(91, 62, 139, .55);
+  transition: transform .25s, box-shadow .25s, filter .25s;
+}
+
+.vz-btn svg {
+  transition: transform .25s;
+}
+
+.vz-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 18px 34px -12px rgba(91, 62, 139, .6);
+}
+
+.vz-btn:hover svg {
+  transform: translateX(4px);
+}
+
+.vz-btn--ghost {
+  background: #fff;
+  color: var(--vz-700);
+  border: 1px solid var(--vz-200);
+  box-shadow: none;
+}
+
+.vz-btn--ghost:hover {
+  box-shadow: 0 10px 24px -14px rgba(91, 62, 139, .4);
+}
+
+.vz-consent {
+  margin: 0;
+  max-width: 52ch;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--vz-mut);
+}
+
+.vz-consent a {
+  color: var(--vz-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* состояние успеха */
+.vz-success {
+  display: none;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  padding: 12px 0;
+}
+
+.vz-card.is-sent .vz-form {
+  display: none;
+}
+
+.vz-card.is-sent .vz-success {
+  display: block;
+  animation: vzUp .55s ease both;
+}
+
+.vz-success h3 {
+  margin: 0 0 10px;
+  font-family: 'Marck Script', cursive;
+  font-weight: 400;
+  font-size: 42px;
+  color: var(--vz-700);
+}
+
+.vz-success p {
+  margin: 0 0 22px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--vz-mut);
+}
+
+.vz-success b {
+  color: var(--vz-700);
+}
+
+@keyframes vzUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.vz-quote {
+  position: relative;
+  z-index: 2;
+  margin: 36px auto 0;
+  text-align: center;
+  font-family: 'Marck Script', cursive;
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--vz-600);
+}
+
+.vz-quote span {
+  display: block;
+  margin-top: 6px;
+  font-size: 18px;
+  color: var(--vz-400);
+}
+
+@media (max-width: 640px) {
+  .vz-enroll {
+    padding: 72px 16px 84px;
+  }
+  .vz-form {
+    grid-template-columns: 1fr;
+  }
+}

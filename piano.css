@@ -1,0 +1,434 @@
+/* ========================================================
+   INTERACTIVE PIANO MODULE (Секция с интерактивным пианино)
+   ======================================================== */
+
+.piano-section {
+  position: relative;
+  width: 100%;
+  height: 768px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(700px 520px at 0% 100%, rgba(220,196,244,.7), transparent 70%),
+    radial-gradient(600px 400px at 35% 0%, #fff, transparent 80%),
+    linear-gradient(100deg, #fff 0%, #fbf9fe 45%, #f1e9fa 100%);
+  border-top: none;
+  border-bottom: none;
+}
+
+/* Мягкие размытые границы сверху и снизу для гармоничного слияния с соседними блоками */
+.piano-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(180deg, #fbf8f9 0%, rgba(251, 248, 249, 0.82) 35%, rgba(251, 248, 249, 0) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.piano-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(0deg, #fbf8f9 0%, rgba(251, 248, 249, 0.82) 35%, rgba(251, 248, 249, 0) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Floating watercolor wash blur spots */
+.piano-section .wash {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  animation: pianoWashDrift 22s ease-in-out infinite alternate;
+}
+@keyframes pianoWashDrift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(40px, -30px) scale(1.12); }
+}
+
+/* Content on the left - perfectly centered vertically via Flexbox */
+.piano-section .piano-content {
+  position: relative;
+  z-index: 12;
+  margin-left: 75px;
+  width: min(46%, 560px);
+}
+
+.piano-section .piano-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #7d5eb4;
+  margin-bottom: 12px;
+}
+
+.piano-section .piano-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 5.5vw, 76px);
+  font-weight: 700;
+  line-height: 1.05;
+  color: #2a1747;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+
+.piano-section .piano-title span {
+  display: block;
+  font-family: 'Marck Script', 'Cormorant Garamond', cursive, serif;
+  font-style: italic;
+  font-weight: 400;
+  color: #7d5eb4;
+  font-size: 0.88em;
+  margin-top: 4px;
+}
+
+.piano-section .piano-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: #4a3a66;
+  margin: 20px 0 30px;
+  max-width: 440px;
+}
+
+.piano-section .piano-btns {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.piano-section .piano-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 32px;
+  text-decoration: none;
+  transition: transform .25s, box-shadow .25s, background .25s;
+}
+
+.piano-section .piano-btn.fill {
+  background: linear-gradient(135deg, #7d5eb4 0%, #604984 100%);
+  color: #fff;
+  box-shadow: 0 10px 24px -8px rgba(125,94,180,.7);
+}
+.piano-section .piano-btn.fill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -8px rgba(125,94,180,.85);
+}
+
+.piano-section .piano-btn.line {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1.5px solid #604984;
+  color: #2a1747;
+  backdrop-filter: blur(8px);
+}
+.piano-section .piano-btn.line:hover {
+  transform: translateY(-2px);
+  background: #fff;
+}
+
+/* Piano stage container - covers the right half */
+.piano-section .piano-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.piano-section .piano-frame {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1080px;
+  overflow: hidden;
+}
+
+.piano-section .piano-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1080px;
+  height: 768px;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Tip badge */
+.piano-section .keys-tip {
+  position: absolute;
+  z-index: 16;
+  right: 48px;
+  bottom: 30px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: #7d5eb4;
+  background: rgba(255,255,255,.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 6px 24px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px -10px rgba(100,70,150,.5);
+  border: 1px solid rgba(201,171,134,.4);
+  pointer-events: none;
+}
+
+/* Layers inside stage */
+.piano-section .layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1080px;
+  height: 768px;
+  pointer-events: none;
+}
+
+.piano-section .haze {
+  transition: transform .8s ease-out;
+}
+
+.piano-section .mist {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(30px);
+  animation: pianoDrift var(--t,18s) ease-in-out infinite alternate;
+  animation-delay: var(--dl,0s);
+}
+@keyframes pianoDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(var(--mx,24px), var(--my,-18px)) scale(1.1); }
+  100% { transform: translate(calc(var(--mx,24px)*-.8), var(--my2,20px)) scale(1.04); }
+}
+
+.piano-section .wc {
+  animation: pianoWcFloat 22s ease-in-out infinite alternate;
+}
+.piano-section .wc2 {
+  animation: pianoWcFloat 28s ease-in-out infinite alternate-reverse;
+}
+@keyframes pianoWcFloat {
+  from { transform: translate(0,0) rotate(0deg); }
+  to   { transform: translate(10px,-12px) rotate(1.2deg); }
+}
+
+.piano-section .streak {
+  fill: none;
+  stroke: url(#pianoStreakGrad);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 160 340;
+  animation: pianoDash 8s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,.9)) drop-shadow(0 0 8px rgba(190,150,240,.6));
+}
+@keyframes pianoDash {
+  to { stroke-dashoffset: -500; }
+}
+
+.piano-section .swirl {
+  animation: pianoSway 9s ease-in-out infinite alternate;
+  transform-origin: 780px 420px;
+}
+@keyframes pianoSway {
+  from { transform: rotate(-1.6deg) translateX(-3px); }
+  to   { transform: rotate(1.6deg) translateX(4px); }
+}
+
+.piano-section .staff path {
+  animation: pianoWave 10s ease-in-out infinite alternate;
+}
+.piano-section .staff path:nth-child(2) { animation-delay: -1.5s; }
+.piano-section .staff path:nth-child(3) { animation-delay: -3s; }
+.piano-section .staff path:nth-child(4) { animation-delay: -4.5s; }
+.piano-section .staff path:nth-child(5) { animation-delay: -6s; }
+@keyframes pianoWave {
+  from { transform: translateY(-2px); }
+  to   { transform: translateY(3px); }
+}
+
+.piano-section .note-float {
+  animation: pianoBob 5s ease-in-out infinite alternate;
+  animation-delay: var(--dl,0s);
+}
+@keyframes pianoBob {
+  from { transform: translateY(0) rotate(-2deg); }
+  to   { transform: translateY(-6px) rotate(2deg); }
+}
+
+.piano-section .star {
+  animation: pianoTwk 3.4s ease-in-out infinite;
+  animation-delay: var(--dl,0s);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes pianoTwk {
+  0%, 100% { opacity: .35; transform: scale(.7); }
+  50%      { opacity: 1;   transform: scale(1.15); }
+}
+
+.piano-section .spark {
+  position: absolute;
+  border-radius: 50%;
+  width: var(--s);
+  height: var(--s);
+  background: radial-gradient(circle, #fff 0%, rgba(255,255,255,.95) 35%, rgba(235,215,255,0) 72%);
+  box-shadow: 0 0 6px 1px rgba(255,255,255,.95), 0 0 12px 3px rgba(190,150,240,.55);
+  opacity: 0;
+  animation: pianoSpark var(--d) ease-in-out infinite;
+  animation-delay: var(--dl);
+}
+@keyframes pianoSpark {
+  0%   { opacity: 0; transform: translate(0,0) scale(.4); }
+  30%  { opacity: 1; transform: translate(calc(var(--dx)*.4), calc(var(--dy)*.4)) scale(1); }
+  70%  { opacity: .7; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.5); }
+}
+
+/* Piano keyboard container & keys */
+.piano-section .piano-outer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1080px;
+  height: 768px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 6;
+  -webkit-mask-image: linear-gradient(to bottom,
+    transparent 0px,
+    rgba(0,0,0,0.15) 55px,
+    rgba(0,0,0,0.65) 115px,
+    #000 175px,
+    #000 590px,
+    rgba(0,0,0,0.80) 655px,
+    rgba(0,0,0,0.35) 715px,
+    transparent 768px);
+  mask-image: linear-gradient(to bottom,
+    transparent 0px,
+    rgba(0,0,0,0.15) 55px,
+    rgba(0,0,0,0.65) 115px,
+    #000 175px,
+    #000 590px,
+    rgba(0,0,0,0.80) 655px,
+    rgba(0,0,0,0.35) 715px,
+    transparent 768px);
+}
+
+.piano-section .piano {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1080px;
+  height: 768px;
+  filter: drop-shadow(-8px 6px 14px rgba(110,80,165,.20));
+  touch-action: none;
+  pointer-events: none;
+}
+
+.piano-section .wk,
+.piano-section .bk {
+  position: absolute;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform .22s cubic-bezier(.2,.8,.3,1), background .3s, box-shadow .3s, opacity .3s;
+}
+
+.piano-section .wk {
+  height: 36px;
+  border-radius: 9px 0 0 9px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, .40) 0%, rgba(255, 255, 255, .30) 45%, rgba(246, 238, 255, .10) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: inset 0 1.5px 0 rgba(255,255,255,.95), inset 0 -2px 3px rgba(175,150,215,.20), 0 2px 5px rgba(120,90,170,.10);
+  z-index: 1;
+}
+
+.piano-section .bk {
+  height: 23px;
+  border-radius: 4px 0 0 4px;
+  background: linear-gradient(180deg,
+    rgba(158,142,182,.84) 0%,
+    rgba(132,114,156,.86) 45%,
+    rgba(104,85,128,.90) 100%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 5px 12px rgba(45,25,75,.42), 0 1px 3px rgba(30,15,55,.28), inset 0 1.5px 0.5px rgba(255,255,255,.6), inset 1.5px 0 1px rgba(255,255,255,.4);
+  border-bottom: 1px solid rgba(40,25,65,.4);
+  z-index: 2;
+}
+
+.piano-section .wk:hover,
+.piano-section .wk.on {
+  transform: translateX(10px);
+  opacity: 1 !important;
+  background: linear-gradient(90deg,
+    rgba(250,240,255,.96) 0%,
+    rgba(235,216,255,.90) 55%,
+    rgba(224,196,255,.84) 100%);
+  box-shadow: inset 0 1.5px 0 #fff, 0 0 22px 5px rgba(195,150,255,.7), 0 2px 6px rgba(150,120,190,.25);
+}
+
+.piano-section .bk:hover,
+.piano-section .bk.on {
+  transform: translateX(8px);
+  opacity: 1 !important;
+  background: linear-gradient(180deg,
+    rgba(195,162,235,.94) 0%,
+    rgba(160,120,210,.96) 50%,
+    rgba(130,90,185,.98) 100%);
+  box-shadow: 0 0 22px 6px rgba(195,145,255,.8), inset 0 1px 0 rgba(255,255,255,.75);
+}
+
+/* Flying musical notes on hit */
+.piano-section .fx {
+  z-index: 30;
+}
+.piano-section .fx i {
+  position: absolute;
+  font-style: normal;
+  color: #b48ee0;
+  text-shadow: 0 0 8px rgba(255,255,255,.95), 0 0 12px rgba(190,150,240,.8);
+  animation: pianoFxRise 1.7s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes pianoFxRise {
+  0%   { opacity: 0; transform: translate(0,0) scale(.5) rotate(0); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.1) rotate(var(--r)); }
+}
+
+@media (max-width: 860px) {
+  .piano-section { height: auto; min-height: 700px; display: block; }
+  .piano-section .piano-content {
+    position: relative;
+    margin-left: 24px;
+    width: auto;
+    padding: 70px 0 20px;
+  }
+  .piano-section .piano-wrap { position: relative; height: 560px; }
+}

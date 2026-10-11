@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1366">
+  <title>Вокальная школа Екатерины Зарембы</title>
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Jost:wght@300;400;500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="piano.css">
+  <link rel="stylesheet" href="timeline.css">
+  <link rel="stylesheet" href="voicetest.css">
+  <link rel="stylesheet" href="enroll.css">
+  <link rel="stylesheet" href="footer.css">
+  <style>
+/* ═══════════════════════════════════════════════════════
+   ОБЩИЕ ПЕРЕМЕННЫЕ И ПАТТЕРНЫ (заменяют дубли в 5 файлах)
+   ═══════════════════════════════════════════════════════ */
+:root {
+  --font-serif: 'Cormorant Garamond', 'Palatino Linotype', Georgia, serif;
+  --font-sans: 'Montserrat', 'Jost', 'Segoe UI', system-ui, sans-serif;
+  --font-script: 'Marck Script', cursive;
+  --clr-deep: #2a1747;
+  --clr-ink: #4a3a66;
+  --clr-mut: #8a7bab;
+  --clr-lav: #a98bcf;
+  --clr-lav-d: #7d5eb4;
+  --clr-lav-l: #ece4f7;
+  --clr-gold: #b79a5e;
+  --clr-bg: #fbf8f9;
+  --ease-smooth: cubic-bezier(.2, .7, .2, 1);
+  --section-pad: clamp(80px, 8vw, 120px);
+}
+
+/* Общие мягкие края секций (вместо 5 копий ::before/::after) */
+.section-fade-edges {
+  position: relative;
+}
+.section-fade-edges::before,
+.section-fade-edges::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 75px;
+  z-index: 10;
+  pointer-events: none;
+}
+.section-fade-edges::before {
+  top: 0;
+  background: linear-gradient(180deg, var(--clr-bg) 0%, rgba(251,248,249,.75) 35%, rgba(251,248,249,0) 100%);
+}
+.section-fade-edges::after {
+  bottom: 0;
+  background: linear-gradient(0deg, var(--clr-bg) 0%, rgba(251,248,249,.75) 35%, rgba(251,248,249,0) 100%);
+}
+
+    @font-face {
+      font-family: 'Marck Script';
+      src: url('MarckScript.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      position: relative;
+      background-color: #eee4ec;
+      font-family: 'Montserrat', sans-serif;
+      color: #3b3043;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Container locked to 1366px for exact 1:1 match with ref.png */
+    .page-wrap {
+      width: 1366px;
+      margin: 0 auto;
+      position: relative;
+      background: #fbf8f9;
+      box-shadow: 0 0 50px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+
+    /* ========================================================
+       HERO CONTAINER (CLIPPED TOGETHER WITH WOMAN)
+       ======================================================== */
+    .hero-container {
+      position: relative;
+      width: 100%;
+      height: 720px;
+      overflow: hidden;
+    }
+
+    /* Background image from hall JPG */
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 720px;
+      background-image: url('Design_violet_hall_with_light_2K_20261010174101.webp');
+      background-size: 1366px auto;
+      background-position: center top;
+      z-index: 1;
+    }
+
+    /* Gentle white light wash matching ref.png */
+    .hero-bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 720px;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.42) 0%,
+        rgba(255, 255, 255, 0.12) 30%,
+        rgba(255, 255, 255, 0.22) 65%,
+        rgba(255, 255, 255, 0.70) 100%
+      );
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Site Header */
+    .site-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      padding: 16px 50px 30px 50px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 36px;
+      z-index: 30;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.8) 75%, transparent 100%);
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-clef-img {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      filter: invert(34%) sepia(28%) saturate(950%) hue-rotate(222deg) brightness(85%) contrast(90%);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .brand-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #614d79;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+
+    .brand-title {
+      font-family: 'Marck Script', cursive;
+      font-size: 26px;
+      color: #5c4381;
+      line-height: 1.05;
+      margin-top: 1px;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: #5d4879;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: color 0.2s ease;
+    }
+
+    .nav-menu a:hover {
+      color: #8b3c68;
+    }
+
+    .header-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+    }
+
+    .badge-line1 {
+      font-family: 'Marck Script', cursive;
+      font-size: 20px;
+      color: #5c4381;
+      line-height: 1.15;
+    }
+
+    .badge-line2 {
+      font-family: 'Marck Script', cursive;
+      font-size: 18px;
+      color: #5c4381;
+      line-height: 1.15;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-flourish {
+      display: inline-block;
+      width: 28px;
+      height: 10px;
+    }
+
+    /* ========================================================
+       WOMAN CUTOUT: IN SAME HERO CONTAINER, EXTENDS ALL THE WAY
+       DOWN AND IS OVERLAID/MASKED TOGETHER WITH BACKGROUND
+       ======================================================== */
+    .hero-woman-wrap {
+      position: absolute;
+      top: 96px;
+      left: 310px;
+      width: 275px;
+      height: 650px;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .hero-woman-img {
+      width: 275px;
+      height: 650px;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      filter: drop-shadow(0 15px 35px rgba(65, 40, 75, 0.25));
+    }
+
+    /* Hero Text Content (center-right) */
+    .hero-content {
+      position: absolute;
+      top: 135px;
+      left: 635px;
+      width: 540px;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: #796695;
+      margin-bottom: 12px;
+    }
+
+    .hero-heading-top {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 44px;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #49336b;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .hero-heading-script {
+      font-family: 'Marck Script', cursive;
+      font-size: 98px;
+      color: #5c4383;
+      line-height: 0.95;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 18px rgba(95, 70, 125, 0.14);
+    }
+
+    .hero-description {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17.5px;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: #614d7c;
+      line-height: 1.55;
+      max-width: 440px;
+      margin: 0 auto 26px auto;
+    }
+
+    /* Hero CTA Button */
+    .btn-gradient {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: linear-gradient(90deg, #644d87 0%, #765b9b 50%, #604883 100%);
+      color: #ffffff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 13px 36px;
+      border-radius: 26px;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(97, 75, 136, 0.38);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-gradient:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(97, 75, 136, 0.48);
+    }
+
+    .btn-arrow {
+      font-size: 16px;
+      line-height: 1;
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-gradient:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    /* Small Crown / Star Emblem below CTA */
+    .hero-emblem {
+      margin: 24px auto 12px auto;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Hero Quote */
+    .hero-quote {
+      text-align: center;
+    }
+
+    .hero-quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: #635079;
+      line-height: 1.45;
+    }
+
+    .hero-quote-author {
+      font-family: 'Marck Script', cursive;
+      font-size: 24px;
+      color: #5c4381;
+      margin-top: 4px;
+      display: block;
+      text-align: right;
+      padding-right: 60px;
+    }
+
+    /* ========================================================
+       SEMICIRCULAR TENDER BOTTOM CUT (CLIPS BOTH WOMAN AND BG)
+       z-index: 15 puts it ABOVE BOTH .hero-bg AND .hero-woman-wrap
+       so it masks them along the EXACT SAME CURVE!
+       ======================================================== */
+    .hero-curve-mask {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 110px;
+      z-index: 15;
+      pointer-events: none;
+    }
+
+    /* ========================================================
+       SECTION 2: 4 FEATURE CARDS
+       ======================================================== */
+    .features-section {
+      position: relative;
+      background: #fbf8f9;
+      padding: 10px 80px 48px 80px;
+      z-index: 20;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      position: relative;
+    }
+
+    .feature-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 10px 24px;
+    }
+
+    /* Delicate vertical dividers between cards */
+    .feature-card:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 20px;
+      bottom: 15px;
+      width: 1px;
+      background: linear-gradient(180deg, transparent 0%, #d8c2c8 25%, #d8c2c8 75%, transparent 100%);
+      opacity: 0.7;
+    }
+
+    /* Circular icon badges */
+    .feature-icon-badge {
+      width: 78px;
+      height: 78px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffffff 65%, #faf4f8 100%);
+      border: 1.5px solid #d4c0ce;
+      box-shadow: 0 4px 18px rgba(130, 100, 150, 0.12);
+    }
+
+    /* 4 tiny diamond dots at 12, 3, 6, 9 o'clock */
+    .feature-icon-badge::before,
+    .feature-icon-badge::after {
+      content: '';
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background-color: #c9ab86;
+      transform: rotate(45deg);
+    }
+    .feature-icon-badge::before { top: -3px; }
+    .feature-icon-badge::after { bottom: -3px; }
+
+    .badge-dot-left,
+    .badge-dot-right {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background-color: #c9ab86;
+      transform: rotate(45deg);
+    }
+    .badge-dot-left { left: -3px; top: calc(50% - 2.5px); }
+    .badge-dot-right { right: -3px; top: calc(50% - 2.5px); }
+
+    .feature-icon-svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .feature-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #554173;
+      line-height: 1.35;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .feature-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      line-height: 1.65;
+      color: #6d5b7a;
+      max-width: 220px;
+    }
+
+    /* ========================================================
+       SECTION 3: ABOUT ME (Екатерина Заремба) IN WHITE CARD
+       ======================================================== */
+    .about-section {
+      position: relative;
+      padding: 10px 60px 40px 60px;
+      background: #fbf8f9;
+      z-index: 20;
+    }
+
+    .about-card {
+      background: #ffffff;
+      border-radius: 40px;
+      box-shadow: 0 10px 40px rgba(115, 90, 135, 0.08);
+      border: 1px solid rgba(225, 210, 220, 0.55);
+      padding: 0 50px 0 0;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 420px;
+    }
+
+    /* Left portrait column spanning full height of left side */
+    .about-portrait-col {
+      width: 380px;
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      height: 420px;
+    }
+
+    .about-portrait-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: left bottom;
+      display: block;
+    }
+
+    /* Middle Bio content */
+    .about-bio-col {
+      flex: 1;
+      padding: 30px 40px 30px 30px;
+    }
+
+    .about-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #7a6693;
+      margin-bottom: 6px;
+    }
+
+    .about-heading-script {
+      font-family: 'Marck Script', cursive;
+      font-size: 60px;
+      color: #5d4681;
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    .about-role {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17.5px;
+      font-weight: 600;
+      color: #5f4a79;
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .about-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      line-height: 1.75;
+      color: #6c5a78;
+      margin-bottom: 28px;
+      max-width: 460px;
+    }
+
+    .btn-gradient-sm {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(90deg, #624b87 0%, #745999 100%);
+      color: #ffffff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 11px 32px;
+      border-radius: 22px;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(97, 75, 136, 0.32);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-gradient-sm:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(97, 75, 136, 0.42);
+    }
+
+    /* Vertical ornate divider */
+    .about-divider-col {
+      width: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 280px;
+      position: relative;
+    }
+
+    .ornate-line {
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(180deg, transparent 0%, #d8c2c8 15%, #d8c2c8 85%, transparent 100%);
+      position: relative;
+    }
+
+    .ornate-center-rhombus {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ornate-center-rhombus::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border: 1.5px solid #c9ab86;
+      transform: rotate(45deg);
+      background: #ffffff;
+    }
+
+    /* Right quote column */
+    .about-quote-col {
+      width: 320px;
+      flex-shrink: 0;
+      padding-left: 20px;
+      text-align: center;
+    }
+
+    .about-quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 21.5px;
+      color: #614d7d;
+      line-height: 1.7;
+    }
+
+    .about-quote-line2 {
+      display: block;
+      margin-top: 10px;
+    }
+
+    .about-quote-line3 {
+      display: block;
+      margin-top: 8px;
+    }
+
+    /* ========================================================
+       SECTION 4: BOTTOM PREVIEW (ПРОЙДИТЕ ТЕСТ)
+       ======================================================== */
+    .bottom-preview-section {
+      position: relative;
+      padding: 10px 60px 40px 60px;
+      text-align: center;
+      background: #fbf8f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .bottom-divider-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 440px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .bottom-divider-line::before,
+    .bottom-divider-line::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #d8c2c8, transparent);
+    }
+
+    .bottom-divider-rhombus {
+      width: 7px;
+      height: 7px;
+      background: #c9ab86;
+      transform: rotate(45deg);
+      margin: 0 14px;
+    }
+
+    .bottom-test-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #634f7f;
+    }
+
+    /* ===== УЛУЧШЕНИЯ: контраст, читаемость, иконки ===== */
+    .brand-sub{font-weight:700;color:#4a3668;font-size:16px;text-shadow:0 0 8px #fff}
+    .brand-title{color:#412b66;text-shadow:0 0 10px #fff,0 1px 0 #fff}
+    .nav-menu a{
+      font-size:14px;font-weight:600;color:#3d2a5c;
+      text-shadow:0 0 6px #fff,0 0 12px rgba(255,255,255,.9);
+      position:relative;padding:6px 0;
+    }
+    .nav-menu a::after{
+      content:'';position:absolute;left:0;bottom:0;width:0;height:1.5px;
+      background:#c9ab86;transition:width .25s ease;
+    }
+    .nav-menu a:hover::after{width:100%}
+    .badge-line1,.badge-line2{color:#412b66;font-weight:700;text-shadow:0 0 8px #fff,0 0 14px rgba(255,255,255,.9)}
+
+    .hero-content::before{
+      content:'';position:absolute;z-index:-1;
+      left:-70px;right:-70px;top:-50px;bottom:60px;
+      background:radial-gradient(ellipse at center,rgba(255,255,255,.80) 0%,rgba(255,255,255,.55) 45%,rgba(255,255,255,0) 72%);
+      filter:blur(8px);
+    }
+    .hero-eyebrow{font-weight:700;color:#45306a;text-shadow:0 0 6px #fff,0 0 12px #fff}
+    .hero-heading-top{
+      font-weight:700;color:#37224f;
+      -webkit-text-stroke:.6px rgba(255,255,255,.7);
+      text-shadow:0 0 10px #fff,0 0 22px rgba(255,255,255,.95),0 2px 6px rgba(70,45,100,.18);
+    }
+    .hero-heading-script{
+      color:#4b3274;
+      -webkit-text-stroke:1px rgba(255,255,255,.85);
+      paint-order:stroke fill;
+      text-shadow:0 0 14px #fff,0 0 28px rgba(255,255,255,.95),0 4px 14px rgba(70,45,110,.22);
+    }
+    .hero-description{
+      font-weight:700;color:#37224f;font-size:18px;
+      text-shadow:0 0 6px #fff,0 0 12px #fff,0 0 22px rgba(255,255,255,.95);
+    }
+    .btn-gradient{
+      background:linear-gradient(90deg,#55397e 0%,#6b4d93 50%,#52387a 100%);
+      font-weight:600;font-size:14px;padding:15px 40px;
+      box-shadow:0 10px 26px rgba(70,45,110,.45),inset 0 1px 0 rgba(255,255,255,.25);
+    }
+    .hero-quote{
+      background:rgba(255,255,255,.78);
+      -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+      border:1px solid rgba(201,171,134,.55);
+      border-radius:18px;padding:12px 26px 8px;
+      box-shadow:0 8px 26px rgba(80,55,110,.16);
+      width:max-content;margin:0 auto;
+    }
+    .hero-quote-text{font-weight:600;font-size:17px;color:#3f2a5e}
+    .hero-quote-author{color:#412b66;padding-right:0;text-align:center;font-size:24px}
+
+    .features-section{padding-top:24px}
+    .feature-icon-badge{
+      width:84px;height:84px;
+      background:radial-gradient(circle at 30% 25%,#fff 0%,#f6edf5 100%);
+      border:1.5px solid #c9ab86;
+      box-shadow:0 6px 20px rgba(100,70,140,.16),inset 0 0 0 5px #fff,inset 0 0 0 6px rgba(201,171,134,.35);
+    }
+    .feature-icon-svg{width:38px;height:38px}
+    .feature-title{font-weight:700;color:#3f2a5e;font-size:17px}
+    .feature-desc{font-size:13.5px;color:#4f3d5f;line-height:1.7;max-width:230px}
+
+    .about-eyebrow{color:#5b4580;font-weight:700}
+    .about-role{color:#463163;font-weight:700}
+    .about-text{font-size:14px;color:#4a3a5a;line-height:1.8}
+    .about-quote-text{color:#463163;font-weight:500}
+    .bottom-test-text{color:#463163}
+
+    /* =========================================================
+       ПРЕМИУМ-АНИМАЦИИ
+       ========================================================= */
+    html{scroll-behavior:smooth}
+    #hero, #program, #about, #pianoSection, #teacher, #reviews, #voiceTest, #test, #record, #signup {
+      scroll-margin-top: 36px;
+    }
+    :root{--ease:cubic-bezier(.2,.7,.2,1)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px);filter:blur(7px)}to{opacity:1;transform:none;filter:blur(0)}}
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-22px)}to{opacity:1;transform:none}}
+    @keyframes spreadIn{from{opacity:0;letter-spacing:.52em;filter:blur(9px)}to{opacity:1;letter-spacing:.16em;filter:blur(0)}}
+    @keyframes spreadSm{from{opacity:0;letter-spacing:.6em}to{opacity:1;letter-spacing:.26em}}
+    @keyframes womanIn{from{opacity:0;transform:translateX(-46px) scale(.97);filter:blur(12px) drop-shadow(0 15px 35px rgba(65,40,75,.25))}
+                       to{opacity:1;transform:none;filter:blur(0) drop-shadow(0 15px 35px rgba(65,40,75,.25))}}
+    @keyframes kenburns{from{scale:1.07}to{scale:1.15}}
+    @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    @keyframes floatSm{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes draw{from{stroke-dashoffset:1.02}to{stroke-dashoffset:0}}
+    @keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+    @keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+    @keyframes sweep{0%{background-position:170% 0}100%{background-position:-70% 0}}
+    @keyframes shine{0%,55%{background-position:170% 0}100%{background-position:-70% 0}}
+    @keyframes sheen{0%,60%{left:-70%}100%{left:130%}}
+    @keyframes btnPulse{0%{box-shadow:0 10px 26px rgba(70,45,110,.45),0 0 0 0 rgba(118,91,155,.50)}
+                        70%,100%{box-shadow:0 10px 26px rgba(70,45,110,.45),0 0 0 20px rgba(118,91,155,0)}}
+    @keyframes glowPulse{0%,100%{text-shadow:0 0 14px #fff,0 0 28px rgba(255,255,255,.95),0 4px 14px rgba(70,45,110,.22)}
+                         50%{text-shadow:0 0 20px #fff,0 0 42px rgba(255,255,255,1),0 0 60px rgba(214,186,255,.65),0 4px 14px rgba(70,45,110,.22)}}
+    @keyframes gem{0%,100%{transform:rotate(45deg) scale(1)}50%{transform:rotate(225deg) scale(1.3)}}
+    @keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+    @keyframes twinkle{0%{opacity:0;transform:translate(0,0) scale(.3)}
+                       50%{opacity:var(--o,.9);transform:translate(var(--dx),var(--dy)) scale(1)}
+                       100%{opacity:0;transform:translate(calc(var(--dx)*2),calc(var(--dy)*2)) scale(.3)}}
+    @keyframes rise{0%{opacity:0;transform:translateY(40px) scale(.8)}
+                    25%{opacity:var(--o,.35)}
+                    100%{opacity:0;transform:translateY(-200px) scale(1.15)}}
+
+    /* --- прогресс скролла --- */
+    .scroll-progress{
+      position:fixed;top:0;left:0;width:100%;height:3px;z-index:999;
+      background:linear-gradient(90deg,#c9ab86,#e8d3a8,#8b6bb8);
+      transform-origin:0 50%;transform:scaleX(var(--sp,0));
+      box-shadow:0 0 10px rgba(201,171,134,.7);pointer-events:none;
+    }
+
+    /* --- шапка --- */
+    .site-header{animation:fadeDown 1s var(--ease) .1s backwards}
+    .brand-clef-img{transform-origin:50% 85%;animation:sway 7s ease-in-out infinite}
+    .nav-menu li{animation:fadeDown .8s var(--ease) backwards}
+    .nav-menu li:nth-child(1){animation-delay:.30s}.nav-menu li:nth-child(2){animation-delay:.38s}
+    .nav-menu li:nth-child(3){animation-delay:.46s}.nav-menu li:nth-child(4){animation-delay:.54s}
+    .nav-menu li:nth-child(5){animation-delay:.62s}.nav-menu li:nth-child(6){animation-delay:.70s}
+    .header-badge{animation:fadeDown 1s var(--ease) .5s backwards}
+    .badge-flourish path{stroke-dasharray:1;animation:draw 1.6s ease 1.5s backwards}
+
+    /* --- герой: фон, блики, частицы --- */
+    .hero-bg{
+      animation:kenburns 26s ease-in-out infinite alternate;
+      translate:calc(var(--px,0)*-7px) calc(var(--py,0)*-4px + var(--sy,0)*.03px);
+      will-change:scale,translate;
+    }
+    .hero-sweep{
+      position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:screen;
+      background:linear-gradient(105deg,transparent 36%,rgba(255,255,255,.22) 46%,rgba(255,244,255,.38) 50%,rgba(255,255,255,.22) 54%,transparent 64%);
+      background-size:260% 100%;animation:sweep 12s ease-in-out infinite;
+    }
+    .hero-glow{
+      position:absolute;left:0;top:0;width:460px;height:460px;z-index:3;pointer-events:none;
+      border-radius:50%;opacity:0;transition:opacity .7s ease;mix-blend-mode:soft-light;
+      background:radial-gradient(circle,rgba(255,236,205,.85) 0%,rgba(255,236,205,0) 66%);
+      transform:translate(calc(var(--mx,0px) - 230px),calc(var(--my,0px) - 230px));
+    }
+    .hero-container:hover .hero-glow{opacity:1}
+    .sparkles{
+      position:absolute;inset:0;z-index:12;pointer-events:none;overflow:hidden;
+      translate:calc(var(--px,0)*-11px) calc(var(--py,0)*-7px);
+    }
+    .sparkle{
+      position:absolute;border-radius:50%;opacity:0;
+      background:radial-gradient(circle,#fff 0%,rgba(255,226,170,.95) 35%,rgba(255,226,170,0) 70%);
+      animation:twinkle var(--t,6s) var(--d,0s) infinite ease-in-out;
+    }
+    .sparkle.star{
+      border-radius:0;background:linear-gradient(135deg,#fff,#f0d9a6);
+      clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);
+      filter:drop-shadow(0 0 4px rgba(255,236,190,.9));
+    }
+    .bokeh{
+      position:absolute;border-radius:50%;opacity:0;filter:blur(2px);
+      background:radial-gradient(circle,rgba(255,255,255,.9),rgba(226,206,255,.45) 55%,rgba(226,206,255,0) 72%);
+      animation:rise var(--t,14s) var(--d,0s) infinite linear;
+    }
+
+    /* --- герой: появление --- */
+    .hero-woman-wrap{
+      translate:calc(var(--px,0)*5px) calc(var(--py,0)*3px + var(--sy,0)*.06px);
+      animation:floatY 9s ease-in-out 2s infinite;
+    }
+    .hero-woman-img{animation:womanIn 1.5s var(--ease) .35s backwards}
+    .hero-content{translate:calc(var(--px,0)*-3px) calc(var(--py,0)*-2px)}
+    .hero-eyebrow{animation:spreadSm 1.3s var(--ease) .7s backwards}
+    .hero-heading-top{animation:spreadIn 1.5s var(--ease) .85s backwards}
+    .hero-heading-script{
+      position:relative;
+      animation:fadeUp 1.3s var(--ease) 1.2s backwards,glowPulse 5.5s ease-in-out 2.8s infinite;
+    }
+    .hero-heading-script::after{
+      content:attr(data-text);position:absolute;inset:0;pointer-events:none;
+      color:transparent;-webkit-text-stroke:0;text-shadow:none;
+      background:linear-gradient(110deg,transparent 40%,rgba(236,206,140,.98) 50%,transparent 60%);
+      background-size:250% 100%;background-position:170% 0;
+      -webkit-background-clip:text;background-clip:text;
+      animation:shine 7s ease-in-out 3s infinite;
+    }
+    .hero-description{animation:fadeUp 1.1s var(--ease) 1.55s backwards}
+    .btn-gradient{
+      position:relative;overflow:hidden;
+      animation:fadeUp 1.1s var(--ease) 1.8s backwards,btnPulse 3.2s ease-out 3.2s infinite;
+      transition:transform .25s ease,box-shadow .25s ease,translate .2s ease-out;
+    }
+    .btn-gradient::before{
+      content:'';position:absolute;top:0;left:-70%;width:45%;height:100%;pointer-events:none;
+      background:linear-gradient(110deg,transparent,rgba(255,255,255,.5),transparent);
+      transform:skewX(-20deg);animation:sheen 5s ease-in-out 3.5s infinite;
+    }
+    .hero-emblem{animation:fadeUp 1s var(--ease) 2s backwards}
+    .hero-emblem svg{animation:spin 22s linear infinite}
+    .hero-quote{animation:fadeUp 1.2s var(--ease) 2.1s backwards}
+
+    /* --- scroll-reveal --- */
+    .js .reveal{
+      opacity:0;transform:translateY(38px);
+      transition:opacity 1s var(--ease) var(--rd,0s),transform 1s var(--ease) var(--rd,0s);
+    }
+    .js .reveal.in{opacity:1;transform:none}
+    .features-grid .feature-card:nth-child(1){--rd:0s}
+    .features-grid .feature-card:nth-child(2){--rd:.14s}
+    .features-grid .feature-card:nth-child(3){--rd:.28s}
+    .features-grid .feature-card:nth-child(4){--rd:.42s}
+
+    /* --- карточки преимуществ --- */
+    .feature-icon-badge{transition:transform .5s var(--ease),box-shadow .5s ease,border-color .4s ease}
+    .badge-ring{
+      position:absolute;inset:-10px;border-radius:50%;pointer-events:none;
+      border:1px dashed rgba(201,171,134,.8);opacity:.55;
+      animation:spin 40s linear infinite;transition:opacity .4s ease,inset .5s var(--ease);
+    }
+    .feature-card:hover .feature-icon-badge{
+      transform:translateY(-8px);border-color:#b8935f;
+      box-shadow:0 16px 34px rgba(100,70,140,.28),inset 0 0 0 5px #fff,inset 0 0 0 6px rgba(201,171,134,.6);
+    }
+    .feature-card:hover .badge-ring{opacity:1;inset:-14px;animation-duration:9s}
+    .feature-icon-svg{animation:floatSm 5s ease-in-out infinite}
+    .feature-card:nth-child(2) .feature-icon-svg{animation-delay:-1.2s}
+    .feature-card:nth-child(3) .feature-icon-svg{animation-delay:-2.4s}
+    .feature-card:nth-child(4) .feature-icon-svg{animation-delay:-3.6s}
+    .feature-title{transition:color .3s ease,letter-spacing .4s var(--ease)}
+    .feature-card:hover .feature-title{color:#6a45a0;letter-spacing:.18em}
+    .feature-icon-svg .draw{stroke-dasharray:1.02}
+    .feature-icon-svg .fill{transition:opacity .8s ease 1s}
+    .js .feature-card:not(.in) .feature-icon-svg .draw{stroke-dashoffset:1.02}
+    .js .feature-card:not(.in) .feature-icon-svg .fill{opacity:0}
+    .feature-card.in .feature-icon-svg .draw{animation:draw 1.6s ease .5s backwards}
+
+    /* --- блок «Обо мне» --- */
+    .about-card{transition:opacity 1s var(--ease),transform 1s var(--ease),box-shadow .5s ease}
+    .about-card.in:hover{box-shadow:0 18px 56px rgba(115,90,135,.16)}
+    .js .about-card:not(.in) .stg{opacity:0}
+    .about-card.in .stg{animation:fadeUp 1s var(--ease) var(--rd,0s) backwards}
+    .js .about-card .about-portrait-img{transform:scale(1.14);transition:transform 2s var(--ease)}
+    .js .about-card.in .about-portrait-img{transform:scale(1)}
+    .about-card.in .ornate-line{transform-origin:50% 50%;animation:growY 1.5s var(--ease) .6s backwards}
+    .ornate-center-rhombus::after{animation:gem 7s ease-in-out infinite}
+    .about-heading-script{background:linear-gradient(100deg,#5d4681 0%,#5d4681 40%,#a8823f 50%,#5d4681 60%,#5d4681 100%);
+      background-size:260% 100%;background-position:170% 0;-webkit-background-clip:text;background-clip:text;
+      -webkit-text-fill-color:transparent;color:transparent;animation:shine 9s ease-in-out 2s infinite}
+
+    /* --- нижний блок --- */
+    .bottom-preview-section.in .bottom-divider-line::before{transform-origin:100% 50%;animation:growX 1.4s var(--ease) .2s backwards}
+    .bottom-preview-section.in .bottom-divider-line::after{transform-origin:0 50%;animation:growX 1.4s var(--ease) .2s backwards}
+    .bottom-divider-rhombus{animation:gem 6s ease-in-out infinite}
+    .bottom-preview-section.in .bottom-test-text{animation:spreadSm 1.6s var(--ease) .4s backwards}
+
+    /* --- доступность: уважаем «уменьшить анимацию» --- */
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation:none!important;transition:none!important}
+      .js .reveal{opacity:1;transform:none}
+      .hero-sweep,.sparkles,.hero-glow{display:none}
+    }
+
+/* ═══ ОПТИМИЗАЦИЯ: пропуск рендера невидимых секций ═══ */
+.features-section,
+.about-section,
+.piano-section,
+.teacher-timeline-section,
+.vt,
+.vz-enroll {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* ═══ ОПТИМИЗАЦИЯ: убираем бесконечные анимации на невидимых элементах ═══ */
+.hero-sweep,
+.sparkles,
+.hero-glow {
+  content-visibility: visible;
+}
+
+/* ═══ ОПТИМИЗАЦИЯ: ограничение backdrop-filter только видимыми секциями ═══ */
+.piano-section::before,
+.piano-section::after,
+.teacher-timeline-section::before,
+.teacher-timeline-section::after,
+.vt::before,
+.vt::after,
+.vz-enroll::before,
+.vz-enroll::after {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" id="sp"></div>
+  <div class="page-wrap">
+    
+    <!-- HEADER -->
+    <header class="site-header">
+      <!-- Navigation -->
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#about">О школе</a></li>
+          <li><a href="#teacher" style="color:#b88b39;font-weight:700;">⚜ Екатерина Заремба</a></li>
+          <li><a href="#program">Программа</a></li>
+          <li><a href="#test">Тест</a></li>
+          <li><a href="#reviews">Отзывы</a></li>
+          <li><a href="#signup">Запись</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right Logo: надпись слева, скрипичный ключ справа -->
+      <a href="#" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-sub">Вокальная школа</span>
+          <span class="brand-title">Екатерины Зарембы</span>
+        </div>
+        <img src="free-icon-treble-clef-2227.webp" alt="Скрипичный ключ" class="brand-clef-img">
+      </a>
+    </header>
+
+    <!-- HERO CONTAINER: BOTH BACKGROUND AND WOMAN ARE IN THIS CONTAINER AND CLIPPED BY THE SAME CURVE -->
+    <section class="hero-container" id="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-bg-overlay"></div>
+      <div class="hero-sweep"></div>
+      <div class="hero-glow" id="heroGlow"></div>
+      <div class="sparkles" id="sparkles"></div>
+
+      <!-- Woman cutout placed inside the hero container -->
+      <div class="hero-woman-wrap">
+        <img src="woman_full_body.webp" alt="Екатерина Заремба" class="hero-woman-img">
+      </div>
+
+      <!-- Hero Text Content -->
+      <div class="hero-content">
+        <div class="hero-eyebrow">Частная вокальная школа</div>
+        <h1 class="hero-heading-top">Откройте свой</h1>
+        <div class="hero-heading-script" data-text="Голос">Голос</div>
+        <p class="hero-description">
+          Фундаментальная академическая школа и современные техники для тех, кто хочет петь свободно, красиво и профессионально.
+        </p>
+        <a href="#signup" class="btn-gradient">
+          Записаться на обучение <span class="btn-arrow">→</span>
+        </a>
+      </div>
+
+      <!-- CURVED MASK: OVERLAYS BOTH WOMAN AND BACKGROUND TO CLIP THEM ALONG THE EXACT SAME CURVE WITH SOFT BLUR -->
+      <svg class="hero-curve-mask" viewBox="0 0 1366 110" preserveAspectRatio="none">
+        <defs>
+          <filter id="softGlowEdge" x="-5%" y="-30%" width="110%" height="160%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- Soft gradient background fill -->
+        <path d="M0,60 Q683,15 1366,70 L1366,110 L0,110 Z" fill="#fbf8f9" filter="url(#softGlowEdge)" />
+        <path d="M0,64 Q683,20 1366,74 L1366,110 L0,110 Z" fill="#fbf8f9" />
+      </svg>
+    </section>
+
+    <!-- SECTION 2: 4 FEATURE CARDS -->
+    <section class="features-section" id="program">
+      <div class="features-grid">
+        
+        <!-- Card 1: Music note -->
+        <div class="feature-card reveal">
+          <div class="feature-icon-badge">
+            <span class="badge-ring"></span>
+            <span class="badge-dot-left"></span>
+            <span class="badge-dot-right"></span>
+            <svg class="feature-icon-svg" viewBox="0 0 32 32" fill="none">
+              <path class="draw" pathLength="1" d="M12 24V9l14-3.5v15.5" stroke="#5d4681" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="draw" pathLength="1" d="M12 13.5l14-3.5" stroke="#5d4681" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle class="fill" cx="8.5" cy="24" r="3.6" fill="#5d4681" stroke="none"/>
+              <circle class="fill" cx="22.5" cy="21" r="3.6" fill="#5d4681" stroke="none"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Академический<br>фундамент</h3>
+          <p class="feature-desc">Профессиональная постановка дыхания, точное звукоизвлечение и снятие голосовых зажимов.</p>
+        </div>
+
+        <!-- Card 2: Crown -->
+        <div class="feature-card reveal">
+          <div class="feature-icon-badge">
+            <span class="badge-ring"></span>
+            <span class="badge-dot-left"></span>
+            <span class="badge-dot-right"></span>
+            <svg class="feature-icon-svg" viewBox="0 0 32 32" fill="none">
+              <path class="draw" pathLength="1" d="M5 24L3.5 10l7.5 6.5L16 7l5 9.5L28.5 10 27 24z" stroke="#5d4681" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="draw" pathLength="1" d="M5 28h22" stroke="#5d4681" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle class="fill" cx="16" cy="5" r="1.4" fill="#5d4681" stroke="none"/>
+              <circle class="fill" cx="3.5" cy="8" r="1.2" fill="#5d4681" stroke="none"/>
+              <circle class="fill" cx="28.5" cy="8" r="1.2" fill="#5d4681" stroke="none"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Классика<br>и эстрада</h3>
+          <p class="feature-desc">Интеграция классической школы с современными требованиями эстрадно-концертной сцены.</p>
+        </div>
+
+        <!-- Card 3: Lyre / Harp -->
+        <div class="feature-card reveal">
+          <div class="feature-icon-badge">
+            <span class="badge-ring"></span>
+            <span class="badge-dot-left"></span>
+            <span class="badge-dot-right"></span>
+            <svg class="feature-icon-svg" viewBox="0 0 32 32" fill="none">
+              <rect class="draw" pathLength="1" x="11.5" y="3.5" width="9" height="15" rx="4.5" stroke="#5d4681" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="draw" pathLength="1" d="M7.5 15a8.5 8.5 0 0 0 17 0" stroke="#5d4681" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="draw" pathLength="1" d="M16 23.5V28M11 28h10" stroke="#5d4681" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="draw" pathLength="1" d="M11.5 9h9M11.5 12.5h9" stroke="#5d4681" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Сценическая<br>культура</h3>
+          <p class="feature-desc">Работа над художественной интерпретацией репертуара и вашей уверенностью перед публикой.</p>
+        </div>
+
+        <!-- Card 4: Crystal / Diamond -->
+        <div class="feature-card reveal">
+          <div class="feature-icon-badge">
+            <span class="badge-ring"></span>
+            <span class="badge-dot-left"></span>
+            <span class="badge-dot-right"></span>
+            <svg class="feature-icon-svg" viewBox="0 0 32 32" fill="none">
+              <path class="draw" pathLength="1" d="M15 3c1.1 7.2 4.3 10.4 11.5 11.5C19.3 15.6 16.1 18.8 15 26c-1.1-7.2-4.3-10.4-11.5-11.5C10.7 13.4 13.9 10.2 15 3z" stroke="#5d4681" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="fill" d="M25 20.5c.4 2.7 1.6 3.9 4.3 4.3-2.7.4-3.9 1.6-4.3 4.3-.4-2.7-1.6-3.9-4.3-4.3 2.7-.4 3.9-1.6 4.3-4.3z" fill="#c9ab86" stroke="none"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Опыт<br>артиста</h3>
+          <p class="feature-desc">Обучение у практикующей солистки и лауреата международных конкурсов вокального искусства.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: ABOUT ME (Екатерина Заремба) -->
+    <section class="about-section" id="about">
+      <div class="about-card reveal">
+        
+        <!-- Portrait Column (Arch with pedestal and hall flowers) -->
+        <div class="about-portrait-col">
+          <img src="portrait_hd.webp" alt="Екатерина Заремба" class="about-portrait-img" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Middle Bio Content -->
+        <div class="about-bio-col">
+          <div class="about-eyebrow stg" style="--rd:.35s">Обо мне</div>
+          <div class="about-heading-script stg" style="--rd:.5s">Екатерина Заремба</div>
+          <div class="about-role stg" style="--rd:.7s">Основатель школы, педагог и солистка</div>
+          <p class="about-text stg" style="--rd:.85s">
+            Я — профессиональная певица и преподаватель профильного музыкального колледжа. Мой подход строится на строгой академической базе, которую мы адаптируем под ваши цели. Моя миссия — помочь вам обрести техническую свободу голоса, раскрыть свой потенциал и уверенно звучать в любой музыке.
+          </p>
+          <a href="#teacher" class="btn-gradient-sm stg" style="--rd:1s">
+            Екатерина Заремба — биография и регалии ⚜ <span class="btn-arrow">→</span>
+          </a>
+        </div>
+
+        <!-- Ornate Divider -->
+        <div class="about-divider-col">
+          <div class="ornate-line">
+            <div class="ornate-center-rhombus"></div>
+          </div>
+        </div>
+
+        <!-- Right Quote Column -->
+        <div class="about-quote-col">
+          <div class="about-quote-text stg" style="--rd:1.1s">
+            «Голос — это тонкий инструмент.
+            <span class="about-quote-line2">Опираясь на классические традиции,</span>
+            <span class="about-quote-line3">мы создаем ваше уникальное</span>
+            <span class="about-quote-line3">современное звучание.»</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: INTERACTIVE PIANO (Голос как искусство) -->
+    <section class="piano-section" id="pianoSection">
+      <!-- Large floating watercolor wash blur spots -->
+      <div class="wash" style="width:540px;height:540px;left:-160px;top:-100px;background:rgba(200,170,240,.48)"></div>
+      <div class="wash" style="width:460px;height:460px;right:-100px;bottom:-60px;background:rgba(235,215,250,.85);animation-delay:-8s"></div>
+      <div class="wash" style="width:500px;height:500px;right:22%;top:5%;background:rgba(215,190,245,.55);animation-delay:-4s"></div>
+      <div class="wash" style="width:580px;height:580px;left:20%;bottom:-80px;background:rgba(190,160,235,.52);animation-delay:-12s"></div>
+      <div class="wash" style="width:420px;height:420px;left:42%;top:-70px;background:rgba(240,225,255,.9);animation-delay:-10s"></div>
+
+      <div class="piano-content reveal">
+        <div class="piano-eyebrow">Мастерство звука</div>
+        <h2 class="piano-title">Голос <span>как искусство</span></h2>
+        <p class="piano-desc">Здесь начинается ваш путь к большой сцене или уверенному пению для себя. Прикоснитесь к клавишам, почувствуйте музыку и сделайте первый шаг к своему новому голосу.</p>
+        <div class="piano-btns">
+          <a class="piano-btn fill" href="#signup">Записаться на урок</a>
+          <a class="piano-btn line" href="#test">Прослушивание</a>
+        </div>
+      </div>
+
+      <div class="piano-wrap" id="pianoWrap">
+        <div class="piano-frame" id="pianoFrame">
+          <div class="piano-stage" id="pianoStage">
+            <!-- shared SVG defs -->
+            <svg width="0" height="0" style="position:absolute">
+              <defs>
+                <symbol id="pianoClef" viewBox="0 0 40 100">
+                  <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M24 14 C23 40 21 70 20 88 C20 99 7 98 10 90 C11 86 17 86 17 91"/>
+                    <path d="M24 14 C28 3 35 8 32 19 C29 32 8 40 8 58 C8 72 27 76 30 63 C33 53 22 47 16 55 C12 61 16 68 22 66"/>
+                  </g>
+                </symbol>
+                <symbol id="pianoN8" viewBox="0 0 24 34">
+                  <g fill="currentColor">
+                    <ellipse cx="7" cy="27" rx="6.2" ry="4.6" transform="rotate(-22 7 27)"/>
+                    <path d="M11.4 25 V3 h1.8 V4 C14 11 21 12 21 20 C18 15 15 14 13.2 12 V25Z"/>
+                  </g>
+                </symbol>
+                <symbol id="pianoN16" viewBox="0 0 44 36">
+                  <g fill="currentColor">
+                    <ellipse cx="7" cy="30" rx="6" ry="4.4" transform="rotate(-22 7 30)"/>
+                    <ellipse cx="32" cy="27" rx="6" ry="4.4" transform="rotate(-22 32 27)"/>
+                    <rect x="11.2" y="7" width="1.8" height="22"/>
+                    <rect x="36.2" y="4" width="1.8" height="21"/>
+                    <polygon points="11.2,6 38,2.5 38,8.5 11.2,12"/>
+                  </g>
+                </symbol>
+                <symbol id="pianoStar" viewBox="-10 -10 20 20">
+                  <path d="M0-9 Q.8 -.8 9 0 Q.8 .8 0 9 Q-.8 .8 -9 0 Q-.8 -.8 0 -9Z" fill="currentColor"/>
+                </symbol>
+                <linearGradient id="pianoStreakGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+                  <stop offset=".5" stop-color="#ffffff" stop-opacity=".95"/>
+                  <stop offset="1" stop-color="#d7b8ff" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <!-- haze / watercolor blur spots -->
+            <div class="layer haze" id="pianoHaze">
+              <div class="mist" style="left:540px;top:60px;width:380px;height:380px;background:radial-gradient(circle,rgba(214,188,246,.6),rgba(214,188,246,0) 68%);--t:19s;--mx:30px;--my:-24px"></div>
+              <div class="mist" style="left:500px;top:390px;width:340px;height:380px;background:radial-gradient(circle,rgba(205,176,242,.55),rgba(205,176,242,0) 68%);--t:23s;--dl:-6s;--mx:-26px;--my:20px"></div>
+              <div class="mist" style="left:770px;top:180px;width:320px;height:320px;background:radial-gradient(circle,rgba(255,255,255,.85),rgba(255,255,255,0) 68%);--t:16s;--dl:-3s;--mx:20px;--my:30px"></div>
+              <div class="mist" style="left:690px;top:500px;width:420px;height:300px;background:radial-gradient(circle,rgba(200,168,242,.5),rgba(200,168,242,0) 68%);--t:21s;--dl:-10s;--mx:-34px;--my:-16px"></div>
+              <div class="mist" style="left:650px;top:250px;width:260px;height:260px;background:radial-gradient(circle,rgba(240,225,255,.9),rgba(240,225,255,0) 66%);--t:14s;--dl:-2s;--mx:18px;--my:-26px"></div>
+              <!-- moving watercolor paint spots directly under the keys -->
+              <div class="mist" style="left:770px;top:90px;width:330px;height:260px;background:radial-gradient(circle,rgba(216,186,248,.65) 0%,rgba(216,186,248,.32) 48%,rgba(216,186,248,0) 70%);--t:25s;--dl:-4s;--mx:22px;--my:-16px"></div>
+              <div class="mist" style="left:830px;top:250px;width:320px;height:290px;background:radial-gradient(circle,rgba(198,162,242,.68) 0%,rgba(198,162,242,.35) 50%,rgba(198,162,242,0) 72%);--t:29s;--dl:-8s;--mx:-20px;--my:18px"></div>
+              <div class="mist" style="left:730px;top:390px;width:360px;height:280px;background:radial-gradient(circle,rgba(222,192,252,.70) 0%,rgba(222,192,252,.36) 48%,rgba(222,192,252,0) 72%);--t:23s;--dl:-2s;--mx:18px;--my:-20px"></div>
+              <div class="mist" style="left:790px;top:530px;width:340px;height:260px;background:radial-gradient(circle,rgba(206,172,246,.60) 0%,rgba(206,172,246,.28) 45%,rgba(206,172,246,0) 70%);--t:27s;--dl:-7s;--mx:-24px;--my:14px"></div>
+
+              <!-- animated watercolor cloud with turbulence & displacement filters -->
+              <svg class="layer" viewBox="0 0 1080 768" fill="none">
+                <defs>
+                  <filter id="pianoWcf" x="-30%" y="-30%" width="160%" height="160%">
+                    <feTurbulence type="fractalNoise" baseFrequency=".016" numOctaves="3" seed="7" result="n">
+                      <animate attributeName="baseFrequency" dur="26s" values=".016;.021;.016" repeatCount="indefinite"/>
+                    </feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" in2="n" scale="60" xChannelSelector="R" yChannelSelector="G" result="d"/>
+                    <feGaussianBlur in="d" stdDeviation="1.4"/>
+                  </filter>
+                  <filter id="pianoWcf2" x="-30%" y="-30%" width="160%" height="160%">
+                    <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="21" result="n"/>
+                    <feDisplacementMap in="SourceGraphic" in2="n" scale="38" xChannelSelector="G" yChannelSelector="R" result="d"/>
+                    <feGaussianBlur in="d" stdDeviation="1"/>
+                  </filter>
+                  <filter id="pianoSoft"><feGaussianBlur stdDeviation="14"/></filter>
+                </defs>
+                <g class="wc">
+                  <ellipse cx="790" cy="380" rx="140" ry="320" fill="#dcc9f2" opacity=".40" filter="url(#pianoSoft)"/>
+                  <ellipse cx="880" cy="350" rx="160" ry="260" fill="#d3baee" opacity=".35" filter="url(#pianoSoft)"/>
+                  <g filter="url(#pianoWcf)">
+                    <ellipse cx="730" cy="225" rx="62" ry="110" fill="#c6a9e8" opacity=".60" transform="rotate(12 730 225)"/>
+                    <ellipse cx="820" cy="260" rx="68" ry="95" fill="#caaee9" opacity=".58" transform="rotate(-6 820 260)"/>
+                    <ellipse cx="715" cy="430" rx="52" ry="92" fill="#c0a1e6" opacity=".65" transform="rotate(-8 715 430)"/>
+                    <ellipse cx="810" cy="420" rx="60" ry="85" fill="#ceb4ec" opacity=".62"/>
+                    <ellipse cx="750" cy="330" rx="46" ry="65" fill="#d6c0f0" opacity=".65"/>
+                    <ellipse cx="690" cy="560" rx="58" ry="52" fill="#c9afe9" opacity=".60"/>
+                    <ellipse cx="770" cy="560" rx="45" ry="75" fill="#d3bcee" opacity=".60"/>
+                    <ellipse cx="850" cy="530" rx="55" ry="68" fill="#cbb0ea" opacity=".52"/>
+                  </g>
+                </g>
+                <g class="wc2" filter="url(#pianoWcf2)">
+                  <circle cx="610" cy="520" r="14" fill="#c9b0ea" opacity=".6"/>
+                  <circle cx="648" cy="470" r="7" fill="#c9b0ea" opacity=".6"/>
+                  <circle cx="690" cy="618" r="22" fill="#c9b0ea" opacity=".5"/>
+                  <circle cx="676" cy="272" r="6" fill="#bda0e4" opacity=".7"/>
+                  <circle cx="742" cy="150" r="9" fill="#c6a9e8" opacity=".6"/>
+                  <circle cx="688" cy="668" r="9" fill="#bda0e4" opacity=".6"/>
+                  <circle cx="760" cy="700" r="12" fill="#c2a6e6" opacity=".55"/>
+                  <circle cx="700" cy="305" r="4" fill="#bda0e4" opacity=".8"/>
+                  <circle cx="638" cy="590" r="4" fill="#bda0e4" opacity=".7"/>
+                  <circle cx="725" cy="95" r="5" fill="#bda0e4" opacity=".7"/>
+                </g>
+                <!-- light streaks -->
+                <g>
+                  <path class="streak" d="M770 110 C 850 220, 860 380, 790 520 S 720 690, 740 765"/>
+                  <path class="streak" style="animation-delay:-3s;animation-duration:10s" d="M800 90 C 880 230, 880 400, 800 540 S 760 700, 770 765"/>
+                  <path class="streak" style="animation-delay:-5s;animation-duration:12s;stroke-width:1.1" d="M740 130 C 820 260, 830 420, 760 560 S 700 700, 720 765"/>
+                </g>
+              </svg>
+            </div>
+
+            <!-- musical notes, staff, and swirling elements -->
+            <svg class="layer" viewBox="0 0 1080 768" fill="none">
+              <g class="staff" stroke="#c9b3e8" stroke-width="1.15" opacity=".75" fill="none">
+                <path d="M-20 196 C 80 146, 200 148, 330 212 S 560 330, 700 374 S 760 396, 800 408"/>
+                <path d="M-20 205 C 80 155, 200 157, 330 221 S 560 339, 700 383 S 760 405, 800 417"/>
+                <path d="M-20 214 C 80 164, 200 166, 330 230 S 560 348, 700 392 S 760 414, 800 426"/>
+                <path d="M-20 223 C 80 173, 200 175, 330 239 S 560 357, 700 401 S 760 423, 800 435"/>
+                <path d="M-20 232 C 80 182, 200 184, 330 248 S 560 366, 700 410 S 760 432, 800 444"/>
+              </g>
+              <use href="#pianoClef" x="20" y="162" width="44" height="106" color="#c3a9e6"/>
+
+              <g class="swirl" stroke="#b79bda" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".85">
+                <path d="M800 240 C 830 190 765 185 752 228 C 744 262 790 276 806 244 C 815 224 795 212 780 224"/>
+                <path d="M802 244 C 858 330 850 450 786 560 C 744 635 702 700 694 765"/>
+                <path d="M812 250 C 868 335 860 455 796 565 C 756 640 716 705 708 765" stroke-width="1" opacity=".6"/>
+              </g>
+
+              <g color="#c4abe6">
+                <use class="note-float" href="#pianoN16" x="158" y="138" width="50" height="41" style="--dl:-1s"/>
+                <use class="note-float" href="#pianoN8" x="586" y="264" width="20" height="28" style="--dl:-2s"/>
+                <use class="note-float" href="#pianoN16" x="534" y="352" width="44" height="36" style="--dl:-.5s"/>
+                <use class="note-float" href="#pianoN8" x="660" y="313" width="18" height="26" style="--dl:-3s"/>
+                <use class="note-float" href="#pianoN16" x="640" y="381" width="38" height="31" style="--dl:-4s"/>
+              </g>
+              <g color="#c9b0ea">
+                <use class="star" href="#pianoStar" x="86" y="130" width="14" height="14" style="--dl:0s"/>
+                <use class="star" href="#pianoStar" x="322" y="164" width="16" height="16" style="--dl:-1.2s"/>
+                <use class="star" href="#pianoStar" x="562" y="268" width="17" height="17" style="--dl:-2s"/>
+                <use class="star" href="#pianoStar" x="26" y="296" width="12" height="12" style="--dl:-.7s"/>
+                <use class="star" href="#pianoStar" x="296" y="140" width="9" height="9" style="--dl:-2.6s"/>
+                <use class="star" href="#pianoStar" x="614" y="330" width="9" height="9" style="--dl:-1.7s"/>
+              </g>
+            </svg>
+
+            <!-- magic sparkles layer -->
+            <div class="layer" id="pianoSparks"></div>
+
+            <!-- piano keyboard (masked gracefully at top & bottom so it dissolves like watercolor) -->
+            <div class="piano-outer">
+              <div class="piano" id="piano"></div>
+            </div>
+
+            <!-- piano overlay: delicate light arc and twinkling stars across keys -->
+            <svg class="layer" viewBox="0 0 1080 768" fill="none" style="z-index:7;pointer-events:none">
+              <path class="streak" style="animation-delay:-2s;animation-duration:11s;stroke-width:1.2;opacity:.8" d="M810 230 C 870 310, 880 430, 816 540 S 745 670, 760 750"/>
+              <g color="#ffffff" style="filter:drop-shadow(0 0 6px rgba(255,255,255,.9)) drop-shadow(0 0 10px rgba(210,170,255,.7))">
+                <use class="star" href="#pianoStar" x="910" y="278" width="13" height="13" style="--dl:-0.8s"/>
+                <use class="star" href="#pianoStar" x="955" y="348" width="15" height="15" style="--dl:-2.1s"/>
+                <use class="star" href="#pianoStar" x="775" y="468" width="14" height="14" style="--dl:-1.4s"/>
+                <use class="star" href="#pianoStar" x="835" y="568" width="13" height="13" style="--dl:-3.0s"/>
+                <use class="star" href="#pianoStar" x="880" y="622" width="12" height="12" style="--dl:-0.5s"/>
+                <use class="star" href="#pianoStar" x="820" y="690" width="11" height="11" style="--dl:-1.9s"/>
+              </g>
+            </svg>
+
+            <div class="layer fx" id="pianoFx"></div>
+
+          </div>
+        </div>
+        <div class="keys-tip">проведите по клавишам</div>
+      </div>
+      <div id="pianoHint" style="display:none"></div>
+    </section>
+
+    <!-- SECTION: ТВОРЧЕСКИЙ ПУТЬ ПЕДАГОГА И ВОКАЛИСТКИ -->
+    <section class="teacher-timeline-section reveal" id="teacher">
+      <!-- Нежные акварельные фиалковые подложки -->
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+
+      <!-- Интерактивный лёгкий холст парящей фиалковой пыльцы -->
+      <canvas id="ambient-canvas"></canvas>
+
+      <div class="wrap">
+        <!-- Заголовок блока -->
+        <div class="sec-head">
+          <div class="sec-kicker">педагог и эксперт</div>
+          <h2 class="sec-title">Екатерина <em>Заремба</em>
+            <!-- Тончайшая ажурная виньетка под именем (SVG) -->
+            <svg class="sec-title-flourish" viewBox="0 0 200 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 6 C40 6 70 1 100 6 C130 11 160 6 200 6" stroke="#9d6be3" stroke-width="1.2" stroke-linecap="round"/>
+              <circle cx="100" cy="6" r="2.5" fill="#854ec7"/>
+            </svg>
+          </h2>
+          <p class="sec-lead">
+            Действующая солистка, преподаватель профильной академии музыки, эксперт федеральных проектов.<br>
+            Путь, неразрывно связанный с академической средой и сценическим мастерством.
+          </p>
+        </div>
+
+        <!-- Сетка контента -->
+        <div class="teacher-grid">
+          <!-- Левая колонка: благородное фото и регалии -->
+          <div class="teacher-photo-col">
+            <div class="teacher-photo-card" id="tiltCard">
+              <img src="VS-250.webp" alt="Екатерина Заремба" loading="lazy" decoding="async"
+                   onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='portrait_hd.webp';}else{this.style.display='none';}">
+              <div class="photo-light-sheen"></div>
+              <div class="photo-caption">
+                <div class="n">Екатерина Заремба</div>
+                <div class="r">солистка · педагог · эксперт</div>
+              </div>
+            </div>
+
+            <div class="creds">
+              <span class="cred"><span class="cred-dot"></span>ДонГМА им. С. С. Прокофьева</span>
+              <span class="cred"><span class="cred-dot"></span>Преподаватель вокала (СПО)</span>
+              <span class="cred"><span class="cred-dot"></span>Лектор общества «Знание»</span>
+              <span class="cred"><span class="cred-dot"></span>Член жюри «Студвесны»</span>
+              <span class="cred"><span class="cred-dot"></span>Союз женщин Донбасса</span>
+            </div>
+
+            <div class="quote-card" id="reviews">
+              <p class="quote-text">
+                «Педагогика для меня — это источник вдохновения, а непрерывная сценическая практика — обязательное условие профессионального тонуса.»
+              </p>
+              <div class="quote-author">— Екатерина Заремба</div>
+            </div>
+          </div>
+
+          <!-- Правая колонка: ажурный таймлайн творческого пути -->
+          <div class="timeline">
+            
+            <div class="tl-item">
+              <div class="tl-box">
+                <!-- Тонкая ажурная нота-виньетка -->
+                <svg class="tl-box-flourish" viewBox="0 0 24 24" fill="none" stroke="#854ec7" stroke-width="1.2">
+                  <circle cx="9" cy="18" r="3"/>
+                  <circle cx="17" cy="15" r="3"/>
+                  <path d="M12 18V6l8-3v12"/>
+                </svg>
+                <div class="tl-badge-wrap">
+                  <span class="y">фундаментальное образование</span>
+                </div>
+                <div class="h">ДонГМА им. С.С. Прокофьева</div>
+                <div class="d">Высшее музыкальное образование. Фундамент академической школы, обеспечивший бесшовную преемственность в педагогике и исполнительстве.</div>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-box">
+                <svg class="tl-box-flourish" viewBox="0 0 24 24" fill="none" stroke="#854ec7" stroke-width="1.2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <div class="tl-badge-wrap">
+                  <span class="y">академическая педагогика</span>
+                </div>
+                <div class="h">Преподаватель факультета СПО</div>
+                <div class="d">Подготовка студентов в музыкальном колледже при ДонГМА: от предпрофессиональной базы до консерваторской ступени.</div>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-box">
+                <svg class="tl-box-flourish" viewBox="0 0 24 24" fill="none" stroke="#854ec7" stroke-width="1.2">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+                <div class="tl-badge-wrap">
+                  <span class="y">экспертный статус</span>
+                </div>
+                <div class="h">Программа «Российская студенческая весна»</div>
+                <div class="d">Член жюри вокальных направлений. Профессиональная оценка и селекция молодых исполнителей по федеральным стандартам.</div>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-box">
+                <svg class="tl-box-flourish" viewBox="0 0 24 24" fill="none" stroke="#854ec7" stroke-width="1.2">
+                  <path d="M12 2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5z"/>
+                  <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8"/>
+                </svg>
+                <div class="tl-badge-wrap">
+                  <span class="y">просветительская миссия</span>
+                </div>
+                <div class="h">Лектор Российского общества «Знание»</div>
+                <div class="d">Официальный статус. Проведение программ, направленных на популяризацию вокальной культуры и раскрытие механизмов работы голоса.</div>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-box">
+                <svg class="tl-box-flourish" viewBox="0 0 24 24" fill="none" stroke="#854ec7" stroke-width="1.2">
+                  <path d="M9 18V5l12-2v13"/>
+                  <circle cx="6" cy="18" r="3"/>
+                  <circle cx="18" cy="16" r="3"/>
+                </svg>
+                <div class="tl-badge-wrap">
+                  <span class="y">общественная деятельность</span>
+                </div>
+                <div class="h">РОО «Союз женщин Донбасса»</div>
+                <div class="d">Член совета организации. Активное участие в культурно-просветительском строительстве и социально значимых инициативах региона.</div>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-box">
+                <svg class="tl-box-flourish" viewBox="0 0 24 24" fill="none" stroke="#854ec7" stroke-width="1.2">
+                  <circle cx="12" cy="8" r="7"/>
+                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+                </svg>
+                <div class="tl-badge-wrap">
+                  <span class="y">сценическая практика</span>
+                </div>
+                <div class="h">Действующая солистка</div>
+                <div class="d">Лауреат международных конкурсов. Регулярные сольные выступления, участие в концертных программах и телевизионных эфирах.</div>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-box">
+                <svg class="tl-box-flourish" viewBox="0 0 24 24" fill="none" stroke="#854ec7" stroke-width="1.2">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                <div class="tl-badge-wrap">
+                  <span class="y">профессиональное кредо</span>
+                </div>
+                <div class="h">Непрерывное развитие</div>
+                <div class="d">Уникальный синтез глубоких традиций академического вокала с эстетикой и запросами современного эстрадно-концертного мира.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: ИНТЕРАКТИВНАЯ ПРОВЕРКА ГОЛОСА -->
+    <section class="vt reveal" id="voiceTest" aria-labelledby="vtH">
+      <!-- Якорь для ссылки из меню шапки -->
+      <span id="test" style="position:absolute;top:-80px;pointer-events:none;"></span>
+
+      <!-- общие SVG-символы -->
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+          <symbol id="vt-clef" viewBox="0 0 40 100">
+            <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M24 14 C23 40 21 70 20 88 C20 99 7 98 10 90 C11 86 17 86 17 91"/>
+              <path d="M24 14 C28 3 35 8 32 19 C29 32 8 40 8 58 C8 72 27 76 30 63 C33 53 22 47 16 55 C12 61 16 68 22 66"/>
+            </g>
+          </symbol>
+          <symbol id="vt-n8" viewBox="0 0 24 34"><g fill="currentColor"><ellipse cx="7" cy="27" rx="6.2" ry="4.6" transform="rotate(-22 7 27)"/><path d="M11.4 25 V3 h1.8 V4 C14 11 21 12 21 20 C18 15 15 14 13.2 12 V25Z"/></g></symbol>
+          <symbol id="vt-n16" viewBox="0 0 44 36"><g fill="currentColor"><ellipse cx="7" cy="30" rx="6" ry="4.4" transform="rotate(-22 7 30)"/><ellipse cx="32" cy="27" rx="6" ry="4.4" transform="rotate(-22 32 27)"/><rect x="11.2" y="7" width="1.8" height="22"/><rect x="36.2" y="4" width="1.8" height="21"/><polygon points="11.2,6 38,2.5 38,8.5 11.2,12"/></g></symbol>
+          <symbol id="vt-star" viewBox="-10 -10 20 20"><path d="M0-9 Q.8 -.8 9 0 Q.8 .8 0 9 Q-.8 .8 -9 0 Q-.8 -.8 0 -9Z" fill="currentColor"/></symbol>
+          <linearGradient id="vtGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#b394d6"/><stop offset=".55" stop-color="#8f6fc0"/><stop offset="1" stop-color="#d4b46c"/>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <!-- акварельные пятна -->
+      <div class="vt-wash" style="width:520px;height:520px;left:-170px;top:-90px;background:rgba(200,170,240,.45)"></div>
+      <div class="vt-wash" style="width:460px;height:460px;right:-110px;top:30%;background:rgba(235,215,250,.85);animation-delay:-8s"></div>
+      <div class="vt-wash" style="width:560px;height:560px;left:18%;bottom:-160px;background:rgba(190,160,235,.45);animation-delay:-12s"></div>
+      <div class="vt-wash" style="width:380px;height:380px;left:48%;top:-90px;background:rgba(240,225,255,.9);animation-delay:-4s"></div>
+
+      <!-- нотный стан, ноты и звёзды -->
+      <svg class="vt-bg" viewBox="0 0 1440 560" preserveAspectRatio="xMidYMin slice" fill="none" aria-hidden="true">
+        <g class="staff" stroke="#c9b3e8" stroke-width="1.15" opacity=".7">
+          <path d="M-20 150 C 220 70, 520 230, 780 150 S 1200 70, 1460 160"/>
+          <path d="M-20 159 C 220 79, 520 239, 780 159 S 1200 79, 1460 169"/>
+          <path d="M-20 168 C 220 88, 520 248, 780 168 S 1200 88, 1460 178"/>
+          <path d="M-20 177 C 220 97, 520 257, 780 177 S 1200 97, 1460 187"/>
+          <path d="M-20 186 C 220 106, 520 266, 780 186 S 1200 106, 1460 196"/>
+        </g>
+        <use href="#vt-clef" x="40" y="112" width="44" height="106" color="#c3a9e6"/>
+        <g color="#c4abe6">
+          <use class="float" href="#vt-n16" x="1180" y="60" width="50" height="41" style="--dl:-1s"/>
+          <use class="float" href="#vt-n8" x="300" y="120" width="20" height="28" style="--dl:-2s"/>
+          <use class="float" href="#vt-n16" x="980" y="190" width="40" height="33" style="--dl:-.5s"/>
+          <use class="float" href="#vt-n8" x="1330" y="150" width="18" height="26" style="--dl:-3s"/>
+        </g>
+        <g color="#c9b0ea">
+          <use class="twk" href="#vt-star" x="170" y="60" width="14" height="14" style="--dl:0s"/>
+          <use class="twk" href="#vt-star" x="640" y="70" width="16" height="16" style="--dl:-1.2s"/>
+          <use class="twk" href="#vt-star" x="1090" y="150" width="17" height="17" style="--dl:-2s"/>
+          <use class="twk" href="#vt-star" x="420" y="230" width="10" height="10" style="--dl:-.7s"/>
+          <use class="twk" href="#vt-star" x="860" y="40" width="9" height="9" style="--dl:-2.6s"/>
+        </g>
+      </svg>
+
+      <div class="vt-wrap">
+        <header class="vt-head">
+          <h2 id="vtH">Проверьте голос <span>спойте короткую мелодию</span></h2>
+          <p>Послушайте девять нот и повторите их голосом. На графике сразу видно, где вы попали в ноту, а где ушли в сторону.</p>
+          <div class="vt-rule" aria-hidden="true">
+            <svg viewBox="-10 -10 20 20"><use href="#vt-star"/></svg>
+          </div>
+        </header>
+
+        <div class="vt-card">
+
+          <!-- шаги -->
+          <div class="vt-steps" aria-hidden="true">
+            <div class="vt-step" data-s="1"><i>1</i><b>Послушайте</b></div>
+            <div class="vt-step" data-s="2"><i>2</i><b>Спойте</b></div>
+            <div class="vt-step" data-s="3"><i>3</i><b>Результат</b></div>
+          </div>
+
+          <!-- кнопки -->
+          <div class="vt-ctl">
+            <button class="vt-btn vt-line" id="vtListen" type="button">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>
+              <span>Прослушать</span>
+            </button>
+            <button class="vt-btn vt-fill" id="vtStart" type="button" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/></svg>
+              <span>Начать тест</span>
+            </button>
+            <button class="vt-btn vt-line" id="vtStop" type="button" hidden>
+              <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+              <span>Остановить</span>
+            </button>
+            <button class="vt-btn vt-line" id="vtReset" type="button" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+              <span>Ещё раз</span>
+            </button>
+          </div>
+          <div class="vt-opts">
+            <label class="vt-tog"><input type="checkbox" id="vtGuide"><span></span>Играть мелодию, пока вы поёте (только в наушниках)</label>
+          </div>
+
+          <!-- слоги -->
+          <div class="vt-lyr" id="vtLyr" aria-label="Слоги и ноты мелодии"></div>
+
+          <!-- график -->
+          <div class="vt-stage" id="vtStage">
+            <canvas id="vtCanvas" role="img" aria-label="График интонации: клавиши слева, ноты мелодии и линия вашего голоса"></canvas>
+            <div class="vt-title-in">График интонации</div>
+            <div class="vt-key" aria-hidden="true"><span class="a"><i></i>Мелодия</span><span class="b"><i></i>Ваш голос</span></div>
+            <div class="vt-count" id="vtCount" hidden aria-hidden="true"><b id="vtDigit">3</b><small>приготовьтесь, мы слушаем тишину</small></div>
+            <div class="vt-fx" id="vtFx" aria-hidden="true"></div>
+          </div>
+
+          <!-- тюнер -->
+          <div class="vt-tune" id="vtTune" aria-hidden="true">
+            <div class="nm" id="vtNote">—</div>
+            <div class="vt-meter"><i class="zone"></i><i class="tk" style="left:0"></i><i class="tk" style="left:25%"></i><i class="tk" style="left:75%"></i><i class="tk" style="left:100%"></i><i class="vt-needle" id="vtNeedle"></i></div>
+            <div class="ct" id="vtCents"></div>
+          </div>
+
+          <div class="vt-status" id="vtStatus" role="status" aria-live="polite">Нажмите «Прослушать», чтобы познакомиться с мелодией</div>
+
+          <!-- результат -->
+          <div class="vt-res" id="vtRes">
+            <div class="vt-ring">
+              <svg viewBox="0 0 150 150">
+                <circle class="bg" cx="75" cy="75" r="72"/>
+                <circle class="fg" id="vtRing" cx="75" cy="75" r="72"/>
+              </svg>
+              <div class="vt-ring-v"><b id="vtScore">0</b><span>точность, %</span></div>
+            </div>
+            <div class="vt-info">
+              <h3 id="vtLevel">—</h3>
+              <p id="vtDesc">—</p>
+              <p class="fine" id="vtFine" hidden></p>
+              <div class="vt-chips" id="vtChips" aria-label="Результат по каждой ноте"></div>
+              <div class="vt-chip-cap">Золотые клавиши — вы попали в ноту, розовые — мимо</div>
+              <div class="vt-met">
+                <div class="vt-m"><b id="vtMHit">—</b><span>Попадание</span></div>
+                <div class="vt-m"><b id="vtMStab">—</b><span>Устойчивость</span></div>
+                <div class="vt-m"><b id="vtMRange">—</b><span>Диапазон</span></div>
+              </div>
+              <div class="vt-cta">
+                <button class="vt-btn vt-gold" id="vtEnroll" type="button">Записаться с результатом</button>
+                <span class="vt-thanks" id="vtThanks" hidden></span>
+              </div>
+            </div>
+          </div>
+
+          <p class="vt-priv">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Звук не записывается и не уходит с вашего устройства: анализ идёт прямо в браузере
+          </p>
+          <p class="vt-credit">Рояль: Salamander Grand Piano, Alexander Holm, CC BY 3.0</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: ЗАПИСЬ НА ОНЛАЙН-УРОКИ -->
+    <section class="vz-enroll reveal" id="record">
+      <!-- Якорь для навигации из меню шапки -->
+      <span id="signup" style="position:absolute;top:-80px;pointer-events:none;"></span>
+
+      <div class="vz-wrap">
+        <header class="vz-head">
+          <p class="vz-overline">Екатерина Заремба · частная вокальная школа</p>
+          <h2 class="vz-title">Запись на уроки</h2>
+          <p class="vz-sub">раскройте свой потенциал</p>
+          <svg class="vz-divider" viewBox="0 0 360 48" aria-hidden="true">
+            <path d="M20 24 C90 14 130 34 180 24 S270 34 340 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="20" cy="24" r="2" fill="currentColor"/>
+            <circle cx="340" cy="24" r="2" fill="currentColor"/>
+            <circle cx="70" cy="20" r="1.4" fill="currentColor"/>
+            <circle cx="110" cy="27" r="1.4" fill="currentColor"/>
+            <circle cx="250" cy="20" r="1.4" fill="currentColor"/>
+            <circle cx="290" cy="27" r="1.4" fill="currentColor"/>
+          </svg>
+          <p class="vz-lead">Оставьте контактные данные и расскажите немного о вашем опыте. Мы свяжемся с вами, чтобы обсудить цели и подобрать время для первого занятия.</p>
+        </header>
+
+        <div class="vz-card" id="vzCard">
+          <form class="vz-form" id="vzForm">
+            <div class="vz-field">
+              <label for="vz-fn">Имя *</label>
+              <input class="vz-input" id="vz-fn" name="firstname" type="text" placeholder="Анна" required>
+            </div>
+            <div class="vz-field">
+              <label for="vz-ln">Фамилия</label>
+              <input class="vz-input" id="vz-ln" name="lastname" type="text" placeholder="Смирнова">
+            </div>
+            <div class="vz-field">
+              <label for="vz-em">Электронная почта *</label>
+              <input class="vz-input" id="vz-em" name="email" type="email" placeholder="example@mail.ru" required>
+            </div>
+            <div class="vz-field">
+              <label for="vz-ph">Телефон *</label>
+              <input class="vz-input" id="vz-ph" name="phone" type="tel" inputmode="tel" placeholder="+7 (900) 000-00-00" required>
+            </div>
+            <div class="vz-field">
+              <label for="vz-lv">Уровень вокала</label>
+              <select class="vz-select" id="vz-lv" name="level">
+                <option value="">Выберите уровень</option>
+                <option>Начинающий — первые шаги</option>
+                <option>Продолжающий — есть опыт</option>
+                <option>Продвинутый — уверенный уровень</option>
+                <option>Профессиональный — сцена, педагогика</option>
+              </select>
+            </div>
+            <div class="vz-field">
+              <label for="vz-in">Инструмент, которым вы владеете</label>
+              <select class="vz-select" id="vz-in" name="instrument">
+                <option value="">Выберите инструмент</option>
+                <option>Не играю</option>
+                <option>Фортепиано</option>
+                <option>Гитара</option>
+                <option>Скрипка</option>
+                <option>Синтезатор</option>
+                <option>Другое</option>
+              </select>
+            </div>
+
+            <div class="vz-attach">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+                <rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>
+              </svg>
+              <span>Мы приложим результат вашего теста голоса:</span>
+              <span class="vz-chip">Результат теста голоса
+                <button type="button" aria-label="Убрать вложение">×</button>
+              </span>
+            </div>
+
+            <div class="vz-hp" aria-hidden="true">
+              <label for="vz-hp">Не заполняйте</label>
+              <input id="vz-hp" name="form-control" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="vz-actions">
+              <button class="vz-btn" type="submit">
+                Записаться на урок
+                <svg viewBox="0 0 24 12" width="20" aria-hidden="true"><path d="M1 6h20m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <p class="vz-consent">Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Мы используем их только чтобы связаться с вами по поводу занятий. <a href="#">Подробнее</a></p>
+            </div>
+          </form>
+
+          <div class="vz-success" role="status" aria-live="polite">
+            <h3>Спасибо!</h3>
+            <p>Ваша заявка успешно отправлена. В ближайшее время мы напишем вам, чтобы договориться о деталях первого урока.</p>
+            <button type="button" class="vz-btn vz-btn--ghost vz-again">Отправить ещё одну заявку</button>
+          </div>
+        </div>
+
+        <p class="vz-quote">«Голос — это не просто звук. Это душа, которая звучит.»<span>— Екатерина Заремба</span></p>
+      </div>
+    </section>
+
+    <!-- FOOTER: НИЖНЯЯ ПАНЕЛЬ САЙТА -->
+    <footer class="site-footer">
+      <div class="footer-wrap">
+        <!-- Бренд слева -->
+        <a href="#" class="footer-brand">
+          <img src="free-icon-treble-clef-2227.webp" alt="Скрипичный ключ" class="footer-clef">
+          <div class="footer-brand-text">
+            <span class="footer-brand-title">Екатерина Заремба</span>
+            <span class="footer-brand-sub">ШКОЛА ВОКАЛА</span>
+          </div>
+        </a>
+
+        <!-- Email -->
+        <a href="mailto:hello@vocal-school.ru" class="footer-email">hello@vocal-school.ru</a>
+
+        <!-- Соцсети -->
+        <div class="footer-socials" aria-label="Социальные сети">
+          <a href="https://vk.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="ВКонтакте">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.684 0H8.316C2.992 0 0 2.992 0 8.316v7.368C0 21.008 2.992 24 8.316 24h7.368C21.008 24 24 21.008 24 15.684V8.316C24 2.992 21.008 0 15.684 0zm3.602 17.172h-1.892c-.716 0-.936-.57-2.224-1.87-1.12-1.1-1.616-1.24-1.892-1.24-.388 0-.5.11-.5.64v1.75c0 .46-.148.72-1.368.72-2.02 0-4.264-1.23-5.856-3.52-2.4-3.41-3.076-5.99-3.076-6.52 0-.25.1-.48.58-.48h1.892c.44 0 .61.2.78.68 1.05 2.53 2.82 4.75 3.55 4.75.27 0 .4-.12.4-.79V9.522c-.08-1.42-.83-1.54-.83-2.05 0-.22.18-.44.47-.44h2.97c.4 0 .55.21.55.68v3.66c0 .4.18.54.3.54.25 0 .46-.14.93-.61 1.45-1.63 2.49-4.14 2.49-4.14.13-.27.35-.48.8-.48h1.892c.57 0 .69.29.57.69-.24.78-2.67 4.54-2.77 4.74-.22.37-.3.54 0 .97.23.32 1.01 1 1.53 1.6 1 1.13 1.76 2.08 1.97 2.73.22.66-.12.98-.68.98z"/>
+            </svg>
+          </a>
+          <a href="https://t.me" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="Telegram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 2L11 13"/>
+              <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
+            </svg>
+          </a>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Копирайт справа -->
+        <div class="footer-copy">© 2026 · Частная вокальная школа Екатерины Зарембы</div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+  (function(){
+    var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hero=document.querySelector('.hero-container');
+
+    /* scroll-reveal */
+    var items=[].slice.call(document.querySelectorAll('.reveal'));
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(es){
+        es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+      },{threshold:.18,rootMargin:'0px 0px -6% 0px'});
+      items.forEach(function(el){io.observe(el)});
+    } else { items.forEach(function(el){el.classList.add('in')}); }
+
+    /* прогресс скролла + лёгкий параллакс по скроллу */
+    var sp=document.getElementById('sp'), ticking=false;
+    function onScroll(){
+      if(ticking) return; ticking=true;
+      requestAnimationFrame(function(){
+        var y=window.scrollY||0, max=document.documentElement.scrollHeight-window.innerHeight;
+        sp.style.setProperty('--sp', max>0 ? Math.min(1,y/max) : 0);
+        if(!reduce) hero.style.setProperty('--sy', Math.min(y,300));
+        ticking=false;
+      });
+    }
+    window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+    if(reduce) return;
+
+    /* искры и боке */
+    var box=document.getElementById('sparkles');
+    function rnd(a,b){return a+Math.random()*(b-a)}
+    for(var i=0;i<16;i++){
+      var d=document.createElement('span');
+      d.className='sparkle'+(i%4===0?' star':'');
+      var size=(i%4===0)?rnd(8,15):rnd(3,7);
+      d.style.cssText='left:'+rnd(1,99)+'%;top:'+rnd(6,86)+'%;width:'+size+'px;height:'+size+'px;'+
+        '--t:'+rnd(4,9)+'s;--d:'+rnd(0,8)+'s;--o:'+rnd(.55,1)+';--dx:'+rnd(-14,14)+'px;--dy:'+rnd(-26,-6)+'px';
+      box.appendChild(d);
+    }
+    for(var j=0;j<5;j++){
+      var b=document.createElement('span');
+      b.className='bokeh';
+      var bs=rnd(26,70);
+      b.style.cssText='left:'+rnd(2,96)+'%;top:'+rnd(45,95)+'%;width:'+bs+'px;height:'+bs+'px;'+
+        '--t:'+rnd(12,22)+'s;--d:'+rnd(0,12)+'s;--o:'+rnd(.22,.42);
+      box.appendChild(b);
+    }
+
+    /* параллакс и свет за курсором (плавное сглаживание) */
+    var tx=0,ty=0,cx=0,cy=0,mx=0,my=0,tmx=0,tmy=0,raf=null;
+    var heroRect=null;
+    function cacheRect(){ heroRect=hero.getBoundingClientRect(); }
+    cacheRect();
+    window.addEventListener('scroll',cacheRect,{passive:true});
+    window.addEventListener('resize',cacheRect,{passive:true});
+
+    hero.addEventListener('mousemove',function(e){
+      if(!heroRect) cacheRect();
+      var r=heroRect;
+      tmx=e.clientX-r.left; tmy=e.clientY-r.top;
+      tx=(tmx/r.width-.5)*2; ty=(tmy/r.height-.5)*2;
+      if(!raf) raf=requestAnimationFrame(loop);
+    },{passive:true});
+
+    hero.addEventListener('mouseleave',function(){tx=0;ty=0;if(!raf) raf=requestAnimationFrame(loop)},{passive:true});
+
+    function loop(){
+      cx+=(tx-cx)*.07; cy+=(ty-cy)*.07; mx+=(tmx-mx)*.14; my+=(tmy-my)*.14;
+      hero.style.setProperty('--px',cx.toFixed(4));
+      hero.style.setProperty('--py',cy.toFixed(4));
+      var g=document.getElementById('heroGlow');
+      if(g){g.style.setProperty('--mx',mx.toFixed(1)+'px');g.style.setProperty('--my',my.toFixed(1)+'px');}
+      if(Math.abs(tx-cx)>.001||Math.abs(ty-cy)>.001||Math.abs(tmx-mx)>.5||Math.abs(tmy-my)>.5){
+        raf=requestAnimationFrame(loop);
+      } else raf=null;
+    }
+
+    /* «магнитные» кнопки */
+    [].forEach.call(document.querySelectorAll('.btn-gradient,.btn-gradient-sm'),function(btn){
+      btn.addEventListener('mousemove',function(e){
+        var r=btn.getBoundingClientRect();
+        var dx=(e.clientX-(r.left+r.width/2))*.18, dy=(e.clientY-(r.top+r.height/2))*.28;
+        btn.style.translate=dx.toFixed(1)+'px '+dy.toFixed(1)+'px';
+      });
+      btn.addEventListener('mouseleave',function(){btn.style.translate=''});
+    });
+
+    /* Плавная навигация по клику на кнопки и ссылки меню */
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      var href = link.getAttribute('href');
+      if (!href) return;
+      
+      if (href === '#' || href === '#hero') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      
+      try {
+        var target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (history.pushState) {
+            history.pushState(null, null, href);
+          }
+        }
+      } catch (err) {}
+    });
+  })();
+  </script>
+  <!-- Модуль интерактивного пианино -->
+  <script src="piano.js"></script>
+  <!-- Модуль бархатного занавеса -->
+  <script src="curtain.js"></script>
+  <!-- Модуль таймлайна творческого пути педагога -->
+  <script src="timeline.js"></script>
+  <!-- Модуль интерактивной проверки голоса -->
+  <script src="voicetest.js"></script>
+  <!-- Модуль формы записи на уроки -->
+  <script src="enroll.js"></script>
+</body>
+</html>
