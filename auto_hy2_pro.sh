@@ -256,7 +256,7 @@ if systemctl is-active --quiet hysteria-server.service; then
     echo "Пароль:        $HY2_PASSWORD"
     echo ""
     echo "--- URI для NekoBox / Hiddify / v2rayN ---"
-    echo "hysteria2://${HY2_PASSWORD}@${USER_DOMAIN}:${HOP_START}-${HOP_END}/?insecure=0&sni=${USER_DOMAIN}&mport=${HOP_START}-${HOP_END}#${USER_DOMAIN}"
+    echo "hysteria2://${HY2_PASSWORD}@${USER_DOMAIN}:${MAIN_PORT}/?insecure=0&sni=${USER_DOMAIN}&mport=${HOP_START}-${HOP_END}#${USER_DOMAIN}"
     echo ""
     echo "--- Конфигурация Outbound для sing-box ---"
     cat <<JSON
