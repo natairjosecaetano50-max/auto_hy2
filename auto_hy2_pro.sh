@@ -5,6 +5,9 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+
 SERVER_IP=$(curl -s4 https://api.ipify.org || curl -s4 https://icanhazip.com)
 HOP_START=20000
 HOP_END=50000
@@ -27,7 +30,6 @@ if [ -z "$RAW_DOMAIN" ]; then
     exit 1
 fi
 
-# Форматирование домена и извлечение сабдомена для API DuckDNS
 if [[ "$RAW_DOMAIN" != *.* ]]; then
     USER_DOMAIN="${RAW_DOMAIN}.duckdns.org"
     DUCK_SUBDOMAIN="$RAW_DOMAIN"
@@ -44,8 +46,8 @@ if [ -z "$HY2_PASSWORD" ]; then
 fi
 
 echo "[INFO] 1/6 Очистка старых служб и правил iptables..."
-systemctl stop hysteria-server.service nginx caddy x-ui 2>/dev/null
-systemctl disable hysteria-server.service x-ui 2>/dev/null
+systemctl stop hysteria-server.service nginx apache2 caddy x-ui 2>/dev/null
+systemctl disable hysteria-server.service apache2 caddy x-ui 2>/dev/null
 rm -rf /etc/hysteria
 
 iptables -t nat -S PREROUTING 2>/dev/null | grep "HY2_HOPPING" | sed 's/-A /-D /' | while read -r rule; do
@@ -58,18 +60,18 @@ while iptables -t mangle -D POSTROUTING -p tcp --tcp-flags SYN,RST SYN -j TCPMSS
 while ip6tables -t mangle -D POSTROUTING -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1160 2>/dev/null; do :; done
 
 echo "[INFO] 2/6 Установка зависимостей, настройка BBR и Port Hopping..."
-apt-get update -y -q > /dev/null
-apt-get install -y -q curl openssl iproute2 iptables ethtool dnsutils nginx certbot cron > /dev/null
+apt-get update -y -q >/dev/null 2>&1
+apt-get install -y -q -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    curl openssl iproute2 iptables ethtool dnsutils nginx cron socat >/dev/null 2>&1
 
-# Привязка IP через API DuckDNS и добавление в cron
 if [ -n "$DUCK_TOKEN" ]; then
-    echo "[INFO] Обновление IP в базе DuckDNS..."
+    echo "[INFO] Обновление IP ($SERVER_IP) в базе DuckDNS..."
     DUCK_RESP=$(curl -s "https://www.duckdns.org/update?domains=${DUCK_SUBDOMAIN}&token=${DUCK_TOKEN}&ip=${SERVER_IP}")
     if [ "$DUCK_RESP" != "OK" ]; then
         echo "[WARN] Ответ DuckDNS API: $DUCK_RESP. Проверьте правильность токена и домена."
     fi
     mkdir -p /opt/duckdns
-    echo "curl -s \"https://www.duckdns.org/update?domains=${DUCK_SUBDOMAIN}&token=${DUCK_TOKEN}&ip=\" >/dev/null 2>&1" > /opt/duckdns/duck.sh
+    echo "curl -s \"https://www.duckdns.org/update?domains=${DUCK_SUBDOMAIN}&token=${DUCK_TOKEN}&ip=${SERVER_IP}\" >/dev/null 2>&1" > /opt/duckdns/duck.sh
     chmod 700 /opt/duckdns/duck.sh
     (crontab -l 2>/dev/null | grep -v "/opt/duckdns/duck.sh"; echo "*/5 * * * * /opt/duckdns/duck.sh") | crontab -
 fi
@@ -121,37 +123,44 @@ if command -v ufw >/dev/null 2>&1 && ufw status | grep -q "Status: active"; then
     ufw allow ${HOP_START}:${HOP_END}/udp >/dev/null
 fi
 
-echo "[INFO] 3/6 Выпуск сертификата Let's Encrypt для $USER_DOMAIN..."
-systemctl stop nginx 2>/dev/null
-certbot certonly --standalone -d "$USER_DOMAIN" --non-interactive --agree-tos --register-unsafely-without-email
+echo "[INFO] 3/6 Выпуск сертификата Let's Encrypt (через acme.sh) для $USER_DOMAIN..."
+systemctl stop nginx apache2 2>/dev/null
+fuser -k 80/tcp 2>/dev/null || true
 
-if [ ! -f "/etc/letsencrypt/live/$USER_DOMAIN/fullchain.pem" ]; then
-    echo "[ERROR] Не удалось получить сертификат Let's Encrypt для $USER_DOMAIN."
-    echo "[ERROR] Убедитесь, что DNS A-запись указывает на $SERVER_IP и порт 80/TCP открыт."
+if [ ! -f "/root/.acme.sh/acme.sh" ]; then
+    curl -fsSL https://get.acme.sh | sh -s email=admin@${USER_DOMAIN} >/dev/null 2>&1
+fi
+
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt >/dev/null 2>&1
+
+# Если указан DuckDNS Token, сначала пробуем безотказный DNS-01 метод, иначе HTTP-01 standalone
+CERT_ISSUED=0
+if [ -n "$DUCK_TOKEN" ]; then
+    export DuckDNS_Token="$DUCK_TOKEN"
+    /root/.acme.sh/acme.sh --issue --dns dns_duckdns -d "$USER_DOMAIN" --keylength ec-256 --force && CERT_ISSUED=1
+fi
+
+if [ "$CERT_ISSUED" -eq 0 ]; then
+    /root/.acme.sh/acme.sh --issue --standalone -d "$USER_DOMAIN" --keylength ec-256 --force && CERT_ISSUED=1
+fi
+
+if [ "$CERT_ISSUED" -eq 0 ]; then
+    echo "[ERROR] Не удалось выпустить сертификат для $USER_DOMAIN."
+    echo "[ERROR] Проверьте привязку домена к IP $SERVER_IP и доступность порта 80/TCP."
     exit 1
 fi
 
-echo "[INFO] 4/6 Установка Hysteria 2 и настройка прав доступа к сертификатам..."
+echo "[INFO] 4/6 Установка Hysteria 2 и привязка сертификатов..."
 bash <(curl -fsSL https://get.hy2.sh/) >/dev/null 2>&1
 mkdir -p /etc/hysteria
 
-cp "/etc/letsencrypt/live/$USER_DOMAIN/fullchain.pem" /etc/hysteria/server.crt
-cp "/etc/letsencrypt/live/$USER_DOMAIN/privkey.pem" /etc/hysteria/server.key
-chown -R hysteria:hysteria /etc/hysteria
-chmod 600 /etc/hysteria/server.key
+/root/.acme.sh/acme.sh --install-cert -d "$USER_DOMAIN" --ecc \
+    --fullchain-file /etc/hysteria/server.crt \
+    --key-file /etc/hysteria/server.key \
+    --reloadcmd "chown -R hysteria:hysteria /etc/hysteria && chmod 600 /etc/hysteria/server.key && systemctl reload nginx 2>/dev/null || true && systemctl restart hysteria-server.service 2>/dev/null || true"
 
-# Deploy-хук для автоматического обновления сертификатов каждые 90 дней
-mkdir -p /etc/letsencrypt/renewal-hooks/deploy
-cat << EOF > /etc/letsencrypt/renewal-hooks/deploy/hysteria-sync.sh
-#!/bin/bash
-cp "/etc/letsencrypt/live/$USER_DOMAIN/fullchain.pem" /etc/hysteria/server.crt
-cp "/etc/letsencrypt/live/$USER_DOMAIN/privkey.pem" /etc/hysteria/server.key
 chown -R hysteria:hysteria /etc/hysteria
 chmod 600 /etc/hysteria/server.key
-systemctl reload nginx
-systemctl restart hysteria-server.service
-EOF
-chmod +x /etc/letsencrypt/renewal-hooks/deploy/hysteria-sync.sh
 
 echo "[INFO] 5/6 Конфигурация Nginx (TCP 443 + Alt-Svc) и Hysteria 2 (UDP 443)..."
 mkdir -p /var/www/html
@@ -163,6 +172,7 @@ cat << 'EOF' > /var/www/html/index.html
 </html>
 EOF
 
+rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
 cat << EOF > /etc/nginx/sites-available/default
 server {
     listen 80 default_server;
@@ -198,6 +208,7 @@ server {
     add_header Alt-Svc 'h3=":443"; ma=86400' always;
 }
 EOF
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 cat <<EOF > /etc/hysteria/config.yaml
 listen: :$MAIN_PORT
