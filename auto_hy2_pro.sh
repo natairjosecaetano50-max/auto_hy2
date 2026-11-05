@@ -335,7 +335,8 @@ sleep 2
 ENC_PATH=$(echo -n "$XHTTP_PATH" | jq -sRr @uri)
 EXTRA_JSON='{"xPaddingBytes":"100-1000"}'
 ENC_EXTRA=$(echo -n "$EXTRA_JSON" | jq -sRr @uri)
-VLESS_URI="vless://${UUID}@${USER_DOMAIN}:${MAIN_PORT}?encryption=none&security=reality&sni=${USER_DOMAIN}&fp=chrome&pbk=${PUBLIC_KEY}&sid=${SHORT_ID}&type=xhttp&path=${ENC_PATH}&mode=packet-up&extra=${ENC_EXTRA}#${USER_DOMAIN}-XHTTP"
+
+VLESS_URI="vless://${UUID}@${USER_DOMAIN}:${MAIN_PORT}?encryption=none&security=reality&sni=${USER_DOMAIN}&fp=chrome&pbk=${PUBLIC_KEY}&sid=${SHORT_ID}&spx=%2F&type=xhttp&path=${ENC_PATH}&mode=packet-up#${USER_DOMAIN}-XHTTP"
 
 if systemctl is-active --quiet xray && systemctl is-active --quiet nginx; then
     cat << EOF > /root/vless_credentials.txt
